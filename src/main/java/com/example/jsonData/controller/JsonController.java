@@ -15,6 +15,7 @@ public class JsonController {
     @Autowired
     private JsonService jsonService;
 
+    @CrossOrigin(origins = "http://localhost:3000")
     @GetMapping("systems")
     @ResponseBody
     public Map<Systems, String> getAllSystems() {
