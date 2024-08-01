@@ -22,6 +22,7 @@ public class JsonController {
         return jsonService.getAllSystems();
     }
 
+    @CrossOrigin(origins = "http://localhost:3000")
     @GetMapping("modules")
     @ResponseBody
     public List<String> getModules(@RequestParam Systems system) {
