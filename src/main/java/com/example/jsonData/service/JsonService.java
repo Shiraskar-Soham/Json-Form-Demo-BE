@@ -1,11 +1,10 @@
 package com.example.jsonData.service;
 
 import com.example.jsonData.enums.Systems;
+import java.util.List;
 import org.springframework.stereotype.Service;
 
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 
 @Service
 public class JsonService {
@@ -14,7 +13,7 @@ public class JsonService {
         return Systems.getAll();
     }
 
-    public Set<String> getModules(Systems system) {
-        return new HashSet<>();
+    public List<String> getModules(Systems system) {
+        return system.getModules();
     }
 }
