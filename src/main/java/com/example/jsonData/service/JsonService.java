@@ -1,8 +1,8 @@
 package com.example.jsonData.service;
 
 import com.example.jsonData.domain.SystemModule;
-import com.example.jsonData.enums.Systems;
 
+import com.example.jsonData.enums.Systems;
 import java.util.HashMap;
 import java.util.List;
 
@@ -29,8 +29,8 @@ public class JsonService {
         return ans;
     }
 
-    public List<String> getModules(String system_name) {
-        return sysModuleRepo.getModules(system_name);
+    public List<String> getModules(Systems system_name) {
+        return sysModuleRepo.getModules(system_name.name());
     }
 
     public void addModules(SystemModule systemModule) {

@@ -1,6 +1,7 @@
 package com.example.jsonData.controller;
 
 import com.example.jsonData.domain.SystemModule;
+import com.example.jsonData.enums.Systems;
 import com.example.jsonData.service.JsonService;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +26,7 @@ public class JsonController {
     @CrossOrigin(origins = "http://localhost:3000")
     @GetMapping("/modules")
     @ResponseBody
-    public List<String> getModules(@RequestParam String system_name) {
+    public List<String> getModules(@RequestParam Systems system_name) {
         return jsonService.getModules(system_name);
     }
 
