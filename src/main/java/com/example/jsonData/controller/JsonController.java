@@ -1,6 +1,6 @@
 package com.example.jsonData.controller;
 
-import com.example.jsonData.enums.Systems;
+import com.example.jsonData.domain.SystemModule;
 import com.example.jsonData.service.JsonService;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,15 +18,32 @@ public class JsonController {
     @CrossOrigin(origins = "http://localhost:3000")
     @GetMapping("systems")
     @ResponseBody
-    public Map<Systems, String> getAllSystems() {
-        return jsonService.getAllSystems();
+    public Map<String, String> getAllSystems() {
+        return jsonService.getAllSystemNames();
     }
 
     @CrossOrigin(origins = "http://localhost:3000")
-    @GetMapping("modules")
+    @GetMapping("/modules")
     @ResponseBody
-    public List<String> getModules(@RequestParam Systems system) {
-        return jsonService.getModules(system);
+    public List<String> getModules(@RequestParam String system_name) {
+        return jsonService.getModules(system_name);
+    }
+
+    @CrossOrigin(origins = "http://localhost:3000")
+    @PostMapping("/createEntry")
+    public void addModule(@RequestBody SystemModule systemModule){
+        jsonService.addModules(systemModule);
+    }
+
+    @CrossOrigin(origins = "http://localhost:3000")
+    @GetMapping ("/getRMS")
+    public Map<String, String> getRMS(@RequestParam String emailID) {
+        return jsonService.getRMS(emailID);
+    }
+
+    @PostMapping("/deleteModule")
+    public void deleteModule(@RequestParam String system_name, @RequestParam String module) throws Exception {
+        jsonService.deleteModule(system_name, module);
     }
 
 }

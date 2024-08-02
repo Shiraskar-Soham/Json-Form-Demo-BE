@@ -15,7 +15,8 @@ public class SystemModule {
 
     @Column(name = "id", nullable = false)
     @Id
-    private String id;
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    private Long id;
 
     @Column(name = "systemName", nullable = false)
     @Enumerated(EnumType.STRING)
@@ -30,4 +31,43 @@ public class SystemModule {
     @Column(name = "isDeleted", nullable = false)
     private boolean isDeleted;
 
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Systems getSystemName() {
+        return systemName;
+    }
+
+    public void setSystemName(Systems systemName) {
+        this.systemName = systemName;
+    }
+
+    public String getSystemDisplayName() {
+        return systemDisplayName;
+    }
+
+    public void setSystemDisplayName(String systemDisplayName) {
+        this.systemDisplayName = systemDisplayName;
+    }
+
+    public String getModule() {
+        return module;
+    }
+
+    public void setModule(String module) {
+        this.module = module;
+    }
+
+    public boolean isDeleted() {
+        return isDeleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        isDeleted = deleted;
+    }
 }
