@@ -15,7 +15,7 @@ public class SystemModule {
 
     @Column(name = "id", nullable = false)
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "systemName", nullable = false)
