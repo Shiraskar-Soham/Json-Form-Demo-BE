@@ -1,6 +1,5 @@
 package com.example.jsonData.controller;
 
-import com.example.jsonData.domain.AccessRequest;
 import com.example.jsonData.dto.AccessRequestDto;
 import com.example.jsonData.service.AccessRequestService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +14,7 @@ public class AccessRequestController {
     private AccessRequestService accessRequestService;
 
     @CrossOrigin(origins = "http://localhost:3000")
-    @PostMapping("/addRequest")
+    @PostMapping("submit")
     public Long addRequest(@RequestBody AccessRequestDto accessRequestDto) throws Exception {
         return accessRequestService.addRequest(accessRequestDto);
     }
