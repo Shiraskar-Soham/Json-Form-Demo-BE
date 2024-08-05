@@ -55,19 +55,27 @@ public class JsonService {
         sysModuleRepo.save(systemModule);
     }
 
-    public Map<String, String> getRMS(String emailID) {
+    public Map<String, String> getRMS(String emailID, String approvingManager) {
+
+//        Map<String, String> map = new HashMap<>();
+//        map.put("department", getDepartment(emailID));
+//        map.put("subDepartment", getSubDepartment(emailID));
+//        if(approvingManager=="L2 Manager") map.put("reportingManager", getManager(getManager(emailID)));
+//        else map.put("reportingManager", getManager(emailID));
+
+
         Map<String, String> map = new HashMap<>();
         map.put("department", "Tech");
         map.put("subDepartment", "Development");
         map.put("reportingManager", "bhuvan@ofbusiness.in");
 
         Map<String, String> map2 = new HashMap<>();
-        map2.put("department", "Tech2");
-        map2.put("subDepartment", "Development2");
-        map2.put("reportingManager", "bhuvan2@ofbusiness.in");
-        if(Objects.equals(emailID, "soham@ofbusiness.in")){
-            return map;
+        map2.put("department", "Tech");
+        map2.put("subDepartment", "Development");
+        map2.put("reportingManager", "ashish@ofbusiness.in");
+        if(Objects.equals(approvingManager, "L2 Manager")){
+            return map2;
         }
-        else return map2;
+        else return map;
     }
 }

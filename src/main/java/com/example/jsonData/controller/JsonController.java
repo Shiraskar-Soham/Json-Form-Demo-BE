@@ -38,8 +38,8 @@ public class JsonController {
 
     @CrossOrigin(origins = "http://localhost:3000")
     @GetMapping ("/getRMS")
-    public Map<String, String> getRMS(@RequestParam String emailID) {
-        return jsonService.getRMS(emailID);
+    public Map<String, String> getRMS(@RequestParam String emailID, @RequestParam String approvingManager) {
+        return jsonService.getRMS(emailID, approvingManager);
     }
 
     @PostMapping("/deleteModule")

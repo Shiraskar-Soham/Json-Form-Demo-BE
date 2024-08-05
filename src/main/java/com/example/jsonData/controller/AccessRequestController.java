@@ -1,9 +1,12 @@
 package com.example.jsonData.controller;
 
+import com.example.jsonData.domain.AccessRequest;
 import com.example.jsonData.dto.AccessRequestDto;
 import com.example.jsonData.service.AccessRequestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("api/v1/request")
@@ -19,4 +22,8 @@ public class AccessRequestController {
         return accessRequestService.addRequest(accessRequestDto);
     }
 
+    @GetMapping("getAll")
+    public List<AccessRequest> getAll(){
+        return accessRequestService.getAll();
+    }
 }
