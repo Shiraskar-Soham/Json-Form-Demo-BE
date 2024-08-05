@@ -10,6 +10,4 @@ import java.util.List;
 @Repository
 public interface AccessRequestRepo extends JpaRepository<AccessRequest, String> {
 
-    @Query(value = "SELECT * FROM access_request", nativeQuery = true)
-    List<AccessRequest> getAll();
 }

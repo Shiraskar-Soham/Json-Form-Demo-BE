@@ -32,6 +32,6 @@ public class AccessRequestService {
     }
 
     public List<AccessRequest> getAll() {
-        return accessRequestRepo.getAll();
+        return accessRequestRepo.findAll();
     }
 }
