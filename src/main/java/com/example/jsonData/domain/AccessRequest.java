@@ -51,6 +51,9 @@ public class AccessRequest {
     @Column(name="isDeleted", nullable = false)
     private boolean isDeleted;
 
+    @Column(name="otherInput", nullable = true)
+    private String otherInput;
+
     public static interface IdStep {
         EmailIdStep withId(Long id);
     }
@@ -88,7 +91,11 @@ public class AccessRequest {
     }
 
     public static interface IsDeletedStep {
-        BuildStep withIsDeleted(boolean isDeleted);
+        OtherInputStep withIsDeleted(boolean isDeleted);
+    }
+
+    public static interface OtherInputStep {
+        BuildStep withOtherInput(String otherInput);
     }
 
     public static interface BuildStep {
@@ -96,7 +103,7 @@ public class AccessRequest {
     }
 
 
-    public static class Builder implements IdStep, EmailIdStep, DepartmentStep, SubDepartmentStep, ApprovingManagerStep, SystemNameStep, ModulesStep, DateCreatedStep, StatusStep, IsDeletedStep, BuildStep {
+    public static class Builder implements IdStep, EmailIdStep, DepartmentStep, SubDepartmentStep, ApprovingManagerStep, SystemNameStep, ModulesStep, DateCreatedStep, StatusStep, IsDeletedStep, OtherInputStep, BuildStep {
         private Long id;
         private String emailId;
         private String department;
@@ -107,6 +114,7 @@ public class AccessRequest {
         private Long dateCreated;
         private Status status;
         private boolean isDeleted;
+        private String otherInput;
 
         private Builder() {
         }
@@ -170,8 +178,14 @@ public class AccessRequest {
         }
 
         @Override
-        public BuildStep withIsDeleted(boolean isDeleted) {
+        public OtherInputStep withIsDeleted(boolean isDeleted) {
             this.isDeleted = isDeleted;
+            return this;
+        }
+
+        @Override
+        public BuildStep withOtherInput(String otherInput) {
+            this.otherInput = otherInput;
             return this;
         }
 
@@ -187,7 +201,8 @@ public class AccessRequest {
                     this.modules,
                     this.dateCreated,
                     this.status,
-                    this.isDeleted
+                    this.isDeleted,
+                    this.otherInput
             );
         }
     }

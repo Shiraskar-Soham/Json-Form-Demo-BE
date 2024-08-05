@@ -18,5 +18,5 @@ public class AccessRequestDto {
     private String approvingManager;
     private Systems systemName;
     private List<String> modules;
-
+    private String otherInput;
 }

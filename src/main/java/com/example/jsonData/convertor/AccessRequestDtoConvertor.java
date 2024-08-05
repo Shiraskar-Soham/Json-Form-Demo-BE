@@ -21,6 +21,7 @@ public class AccessRequestDtoConvertor implements Converter<AccessRequestDto, Ac
                 .withDateCreated(null)
                 .withStatus(null)
                 .withIsDeleted(false)
+                .withOtherInput(source.getOtherInput())
                 .build();
     }
 
