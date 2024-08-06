@@ -18,4 +18,7 @@ public interface SysModuleRepo extends JpaRepository<SystemModule, String> {
 
     @Query(value = "Select * FROM system_module WHERE system_name = ?1 and module = ?2", nativeQuery = true)
     SystemModule findModule(String systemName, String module);
+
+    @Query(value = "Select company_name, company_display_name from system_module WHERE is_deleted = false GROUP BY company_name, company_display_name", nativeQuery = true)
+    List<Object[]> getAllCompany();
 }

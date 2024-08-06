@@ -29,6 +29,15 @@ public class JsonService {
         return ans;
     }
 
+    public Map<String, String> getAllCompanies() {
+        List<Object[]> result = sysModuleRepo.getAllCompany();
+        Map<String, String> comps = new HashMap<>();
+        result.forEach(entry->{
+            comps.put((String) entry[0], (String) entry[1]);
+        });
+        return comps;
+    }
+
     public List<String> getModules(Systems system_name) {
         return sysModuleRepo.getModules(system_name.name());
     }

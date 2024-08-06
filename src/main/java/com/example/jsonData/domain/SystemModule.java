@@ -1,5 +1,6 @@
 package com.example.jsonData.domain;
 
+import com.example.jsonData.enums.Company;
 import com.example.jsonData.enums.Systems;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -18,6 +19,13 @@ public class SystemModule {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name= "companyName", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private Company companyName;
+
+    @Column(name = "companyDisplayName", nullable = false)
+    private String companyDisplayName;
+
     @Column(name = "systemName", nullable = false)
     @Enumerated(EnumType.STRING)
     private Systems systemName;
@@ -31,43 +39,108 @@ public class SystemModule {
     @Column(name = "isDeleted", nullable = false)
     private boolean isDeleted;
 
-    public Long getId() {
-        return id;
+    public static interface IdStep {
+        CompanyNameStep withId(Long id);
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public static interface CompanyNameStep {
+        CompanyDisplayNameStep withCompanyName(Company companyName);
     }
 
-    public Systems getSystemName() {
-        return systemName;
+    public static interface CompanyDisplayNameStep {
+        SystemNameStep withCompanyDisplayName(String companyDisplayName);
     }
 
-    public void setSystemName(Systems systemName) {
-        this.systemName = systemName;
+    public static interface SystemNameStep {
+        SystemDisplayNameStep withSystemName(Systems systemName);
     }
 
-    public String getSystemDisplayName() {
-        return systemDisplayName;
+    public static interface SystemDisplayNameStep {
+        ModuleStep withSystemDisplayName(String systemDisplayName);
     }
 
-    public void setSystemDisplayName(String systemDisplayName) {
-        this.systemDisplayName = systemDisplayName;
+    public static interface ModuleStep {
+        IsDeletedStep withModule(String module);
     }
 
-    public String getModule() {
-        return module;
+    public static interface IsDeletedStep {
+        BuildStep withIsDeleted(boolean isDeleted);
     }
 
-    public void setModule(String module) {
-        this.module = module;
+    public static interface BuildStep {
+        SystemModule build();
     }
 
-    public boolean isDeleted() {
-        return isDeleted;
-    }
 
-    public void setDeleted(boolean deleted) {
-        isDeleted = deleted;
+    public static class Builder implements IdStep, CompanyNameStep, CompanyDisplayNameStep, SystemNameStep, SystemDisplayNameStep, ModuleStep, IsDeletedStep, BuildStep {
+        private Long id;
+        private Company companyName;
+        private String companyDisplayName;
+        private Systems systemName;
+        private String systemDisplayName;
+        private String module;
+        private boolean isDeleted;
+
+        private Builder() {
+        }
+
+        public static IdStep systemModule() {
+            return new Builder();
+        }
+
+        @Override
+        public CompanyNameStep withId(Long id) {
+            this.id = id;
+            return this;
+        }
+
+        @Override
+        public CompanyDisplayNameStep withCompanyName(Company companyName) {
+            this.companyName = companyName;
+            return this;
+        }
+
+        @Override
+        public SystemNameStep withCompanyDisplayName(String companyDisplayName) {
+            this.companyDisplayName = companyDisplayName;
+            return this;
+        }
+
+        @Override
+        public SystemDisplayNameStep withSystemName(Systems systemName) {
+            this.systemName = systemName;
+            return this;
+        }
+
+        @Override
+        public ModuleStep withSystemDisplayName(String systemDisplayName) {
+            this.systemDisplayName = systemDisplayName;
+            return this;
+        }
+
+        @Override
+        public IsDeletedStep withModule(String module) {
+            this.module = module;
+            return this;
+        }
+
+        @Override
+        public BuildStep withIsDeleted(boolean isDeleted) {
+            this.isDeleted = isDeleted;
+            return this;
+        }
+
+        @Override
+        public SystemModule build() {
+            return new SystemModule(
+                    this.id,
+                    this.companyName,
+                    this.companyDisplayName,
+                    this.systemName,
+                    this.systemDisplayName,
+                    this.module,
+                    this.isDeleted
+            );
+        }
     }
 }

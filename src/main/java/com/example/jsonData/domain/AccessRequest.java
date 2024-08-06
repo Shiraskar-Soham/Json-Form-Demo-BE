@@ -1,6 +1,7 @@
 package com.example.jsonData.domain;
 
 
+import com.example.jsonData.enums.Company;
 import com.example.jsonData.enums.Status;
 import com.example.jsonData.enums.Systems;
 import jakarta.persistence.*;
@@ -34,6 +35,10 @@ public class AccessRequest {
     @Column(name= "approvingManager", nullable = false)
     private String approvingManager;
 
+    @Column(name= "companyName", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private Company companyName;
+    
     @Column(name= "systemName", nullable = false)
     @Enumerated(EnumType.STRING)
     private Systems systemName;
@@ -71,7 +76,11 @@ public class AccessRequest {
     }
 
     public static interface ApprovingManagerStep {
-        SystemNameStep withApprovingManager(String approvingManager);
+        CompanyNameStep withApprovingManager(String approvingManager);
+    }
+
+    public static interface CompanyNameStep {
+        SystemNameStep withCompanyName(Company companyName);
     }
 
     public static interface SystemNameStep {
@@ -103,12 +112,13 @@ public class AccessRequest {
     }
 
 
-    public static class Builder implements IdStep, EmailIdStep, DepartmentStep, SubDepartmentStep, ApprovingManagerStep, SystemNameStep, ModulesStep, DateCreatedStep, StatusStep, IsDeletedStep, OtherInputStep, BuildStep {
+    public static class Builder implements IdStep, EmailIdStep, DepartmentStep, SubDepartmentStep, ApprovingManagerStep, CompanyNameStep, SystemNameStep, ModulesStep, DateCreatedStep, StatusStep, IsDeletedStep, OtherInputStep, BuildStep {
         private Long id;
         private String emailId;
         private String department;
         private String subDepartment;
         private String approvingManager;
+        private Company companyName;
         private Systems systemName;
         private List<String> modules;
         private Long dateCreated;
@@ -148,8 +158,14 @@ public class AccessRequest {
         }
 
         @Override
-        public SystemNameStep withApprovingManager(String approvingManager) {
+        public CompanyNameStep withApprovingManager(String approvingManager) {
             this.approvingManager = approvingManager;
+            return this;
+        }
+
+        @Override
+        public SystemNameStep withCompanyName(Company companyName) {
+            this.companyName = companyName;
             return this;
         }
 
@@ -197,6 +213,7 @@ public class AccessRequest {
                     this.department,
                     this.subDepartment,
                     this.approvingManager,
+                    this.companyName,
                     this.systemName,
                     this.modules,
                     this.dateCreated,

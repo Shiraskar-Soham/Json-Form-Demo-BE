@@ -16,6 +16,7 @@ public class AccessRequestDto {
     private String department;
     private String subDepartment;
     private String approvingManager;
+    private String companyName;
     private Systems systemName;
     private List<String> modules;
     private String otherInput;

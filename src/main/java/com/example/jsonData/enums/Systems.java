@@ -8,7 +8,7 @@ public enum Systems {
     OMAT,
     SALES_SYSTEM,
     CERES,
-    OAGRIFARM,
+    OAGRIFARMLOAN,
     OCEAN,
     PRISM,
     OMAT_FINANCE;

@@ -2,6 +2,7 @@ package com.example.jsonData.convertor;
 
 import com.example.jsonData.domain.AccessRequest;
 import com.example.jsonData.dto.AccessRequestDto;
+import com.example.jsonData.enums.Company;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
 
@@ -16,6 +17,7 @@ public class AccessRequestDtoConvertor implements Converter<AccessRequestDto, Ac
                 .withDepartment(source.getDepartment())
                 .withSubDepartment(source.getSubDepartment())
                 .withApprovingManager(source.getApprovingManager())
+                .withCompanyName(Company.valueOf(source.getCompanyName()))
                 .withSystemName(source.getSystemName())
                 .withModules(source.getModules())
                 .withDateCreated(null)

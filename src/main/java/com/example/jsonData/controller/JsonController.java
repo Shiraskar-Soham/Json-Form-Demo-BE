@@ -17,6 +17,13 @@ public class JsonController {
     private JsonService jsonService;
 
     @CrossOrigin(origins = "http://localhost:3000")
+    @GetMapping("company")
+    @ResponseBody
+    public Map<String, String> getAllCompanies(){
+        return jsonService.getAllCompanies();
+    }
+
+    @CrossOrigin(origins = "http://localhost:3000")
     @GetMapping("systems")
     @ResponseBody
     public Map<String, String> getAllSystems() {
@@ -24,27 +31,31 @@ public class JsonController {
     }
 
     @CrossOrigin(origins = "http://localhost:3000")
-    @GetMapping("/modules")
+    @GetMapping("modules")
     @ResponseBody
     public List<String> getModules(@RequestParam Systems system_name) {
         return jsonService.getModules(system_name);
     }
 
     @CrossOrigin(origins = "http://localhost:3000")
-    @PostMapping("/createEntry")
+    @PostMapping("createEntry")
     public void addModule(@RequestBody SystemModule systemModule){
         jsonService.addModules(systemModule);
     }
 
     @CrossOrigin(origins = "http://localhost:3000")
-    @GetMapping ("/getRMS")
+    @GetMapping ("getRMS")
     public Map<String, String> getRMS(@RequestParam String emailID, @RequestParam String approvingManager) {
         return jsonService.getRMS(emailID, approvingManager);
     }
 
-    @PostMapping("/deleteModule")
+    @PostMapping("deleteModule")
     public void deleteModule(@RequestParam String system_name, @RequestParam String module) throws Exception {
         jsonService.deleteModule(system_name, module);
     }
 
 }
+
+
+
+
