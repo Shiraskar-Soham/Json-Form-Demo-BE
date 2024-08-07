@@ -34,8 +34,8 @@ public class JsonController {
     @CrossOrigin(origins = "http://localhost:3000")
     @GetMapping("systems")
     @ResponseBody
-    public Map<String, String> getAllSystems() {
-        return jsonService.getAllSystemNames();
+    public Map<String, String> getAllSystems(@RequestParam Company company_name) {
+        return jsonService.getAllCompanySystemNames(company_name);
     }
 
     @CrossOrigin(origins = "http://localhost:3000")

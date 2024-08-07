@@ -18,13 +18,13 @@ public class JsonService {
     @Autowired
     private SysModuleRepo sysModuleRepo;
 
-    public Map<String, String> getAllSystemNames() {
-        List<Object[]> result = sysModuleRepo.getAllSystemNames();
-        Map<String, String> ans = new HashMap<>();
+    public Map<String, String> getAllCompanySystemNames(Company company_name) {
+        List<Object[]> result = sysModuleRepo.getAllSystemNames(company_name.name());
+        Map<String, String> resultMap = new HashMap<>();
         result.forEach(entry -> {
-            ans.put((String) entry[0], (String) entry[1]);
+            resultMap.put((String) entry[0], (String) entry[1]);
         });
-        return ans;
+        return resultMap;
     }
 
     public Map<String, String> getAllCompanies() {
