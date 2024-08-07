@@ -2,17 +2,15 @@ package com.example.jsonData.service;
 
 import com.example.jsonData.domain.SystemModule;
 
+import com.example.jsonData.enums.Company;
 import com.example.jsonData.enums.Systems;
-import java.util.HashMap;
-import java.util.List;
+
+import java.util.*;
 
 import com.example.jsonData.repository.SysModuleRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
-
-import java.util.Map;
-import java.util.Objects;
 
 @Service
 public class JsonService {
@@ -38,8 +36,8 @@ public class JsonService {
         return comps;
     }
 
-    public List<String> getModules(Systems system_name) {
-        return sysModuleRepo.getModules(system_name.name());
+    public List<String> getModules(Company company_name, Systems system_name) {
+        return sysModuleRepo.getModules(company_name.name(), system_name.name());
     }
 
     public void addModules(SystemModule systemModule) {
@@ -86,5 +84,10 @@ public class JsonService {
             return map2;
         }
         else return map;
+    }
+
+    public List<String> getAllManagers() {
+        return List.of("bhuvan@ofbusiness.in", "ashish@ofbusiness.in", "bhuvan.gupta@ofbusiness.in");
+
     }
 }

@@ -1,6 +1,7 @@
 package com.example.jsonData.controller;
 
 import com.example.jsonData.domain.SystemModule;
+import com.example.jsonData.enums.Company;
 import com.example.jsonData.enums.Systems;
 import com.example.jsonData.service.JsonService;
 import java.util.List;
@@ -24,6 +25,13 @@ public class JsonController {
     }
 
     @CrossOrigin(origins = "http://localhost:3000")
+    @GetMapping("manager")
+    @ResponseBody
+    public List<String> getAllManagers(){
+        return jsonService.getAllManagers();
+    }
+
+    @CrossOrigin(origins = "http://localhost:3000")
     @GetMapping("systems")
     @ResponseBody
     public Map<String, String> getAllSystems() {
@@ -33,8 +41,8 @@ public class JsonController {
     @CrossOrigin(origins = "http://localhost:3000")
     @GetMapping("modules")
     @ResponseBody
-    public List<String> getModules(@RequestParam Systems system_name) {
-        return jsonService.getModules(system_name);
+    public List<String> getModules(@RequestParam Company company_name, @RequestParam Systems system_name) {
+        return jsonService.getModules(company_name, system_name);
     }
 
     @CrossOrigin(origins = "http://localhost:3000")
