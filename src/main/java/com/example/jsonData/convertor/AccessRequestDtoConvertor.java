@@ -13,17 +13,16 @@ public class AccessRequestDtoConvertor implements Converter<AccessRequestDto, Ac
     public AccessRequest convert(AccessRequestDto source) {
         return AccessRequest.Builder.accessRequest()
                 .withId(null)
-                .withEmailId(source.getEmailId())
-                .withDepartment(source.getDepartment())
-                .withSubDepartment(source.getSubDepartment())
+                .withEmailId("soham.shiraskar@ofbusiness.in")
+                .withDepartment("Technology")
+                .withSubDepartment("Development")
                 .withApprovingManager(source.getApprovingManager())
-                .withCompanyName(Company.valueOf(source.getCompanyName()))
-                .withSystemName(source.getSystemName())
-                .withModules(source.getModules())
+                .withCompanyName(Company.valueOf(source.getCompany()))
+                .withPermissionRequired(source.getModules())
                 .withDateCreated(null)
                 .withStatus(null)
                 .withIsDeleted(false)
-                .withOtherInput(source.getOtherInput())
+                .withRemarks(source.getRemarks())
                 .build();
     }
 

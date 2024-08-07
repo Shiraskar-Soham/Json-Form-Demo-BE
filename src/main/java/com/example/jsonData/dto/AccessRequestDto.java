@@ -1,6 +1,7 @@
 package com.example.jsonData.dto;
 
 import com.example.jsonData.enums.Systems;
+import java.util.Map;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -12,12 +13,8 @@ import java.util.List;
 @AllArgsConstructor
 public class AccessRequestDto {
 
-    private String emailId;
-    private String department;
-    private String subDepartment;
     private String approvingManager;
-    private String companyName;
-    private Systems systemName;
-    private List<String> modules;
-    private String otherInput;
+    private String company;
+    private Map<Systems, List<String>> modules;
+    private String remarks;
 }

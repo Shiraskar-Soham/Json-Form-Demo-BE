@@ -1,10 +1,12 @@
 package com.example.jsonData.domain;
 
 
+import com.example.jsonData.convertor.MapToJsonConvertor;
 import com.example.jsonData.enums.Company;
 import com.example.jsonData.enums.Status;
 import com.example.jsonData.enums.Systems;
 import jakarta.persistence.*;
+import java.util.Map;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -39,12 +41,9 @@ public class AccessRequest {
     @Enumerated(EnumType.STRING)
     private Company companyName;
     
-    @Column(name= "systemName", nullable = false)
-    @Enumerated(EnumType.STRING)
-    private Systems systemName;
-
-    @Column(name= "modules", nullable = false)
-    private List<String> modules;
+    @Column(name= "permissionRequired", nullable = false, columnDefinition = "json")
+    @Convert(converter = MapToJsonConvertor.class)
+    private Map<Systems, List<String>> permissionRequired;
 
     @Column(name= "dateCreated", nullable = false)
     private Long dateCreated;
@@ -56,8 +55,8 @@ public class AccessRequest {
     @Column(name="isDeleted", nullable = false)
     private boolean isDeleted;
 
-    @Column(name="otherInput", nullable = true)
-    private String otherInput;
+    @Column(name="remarks", nullable = true)
+    private String remarks;
 
     public static interface IdStep {
         EmailIdStep withId(Long id);
@@ -80,15 +79,11 @@ public class AccessRequest {
     }
 
     public static interface CompanyNameStep {
-        SystemNameStep withCompanyName(Company companyName);
+        PermissionRequiredStep withCompanyName(Company companyName);
     }
 
-    public static interface SystemNameStep {
-        ModulesStep withSystemName(Systems systemName);
-    }
-
-    public static interface ModulesStep {
-        DateCreatedStep withModules(List<String> modules);
+    public static interface PermissionRequiredStep {
+        DateCreatedStep withPermissionRequired(Map<Systems, List<String>> permissionRequired);
     }
 
     public static interface DateCreatedStep {
@@ -100,31 +95,42 @@ public class AccessRequest {
     }
 
     public static interface IsDeletedStep {
-        OtherInputStep withIsDeleted(boolean isDeleted);
+        RemarksStep withIsDeleted(boolean isDeleted);
     }
 
-    public static interface OtherInputStep {
-        BuildStep withOtherInput(String otherInput);
+    public static interface RemarksStep {
+        BuildStep withRemarks(String remarks);
     }
 
     public static interface BuildStep {
         AccessRequest build();
     }
 
-
-    public static class Builder implements IdStep, EmailIdStep, DepartmentStep, SubDepartmentStep, ApprovingManagerStep, CompanyNameStep, SystemNameStep, ModulesStep, DateCreatedStep, StatusStep, IsDeletedStep, OtherInputStep, BuildStep {
+    public static class Builder
+        implements IdStep, EmailIdStep, DepartmentStep, SubDepartmentStep, ApprovingManagerStep,
+        CompanyNameStep, PermissionRequiredStep, DateCreatedStep, StatusStep, IsDeletedStep,
+        RemarksStep, BuildStep {
         private Long id;
+
         private String emailId;
+
         private String department;
+
         private String subDepartment;
+
         private String approvingManager;
+
         private Company companyName;
-        private Systems systemName;
-        private List<String> modules;
+
+        private Map<Systems, List<String>> permissionRequired;
+
         private Long dateCreated;
+
         private Status status;
+
         private boolean isDeleted;
-        private String otherInput;
+
+        private String remarks;
 
         private Builder() {
         }
@@ -164,20 +170,15 @@ public class AccessRequest {
         }
 
         @Override
-        public SystemNameStep withCompanyName(Company companyName) {
+        public PermissionRequiredStep withCompanyName(Company companyName) {
             this.companyName = companyName;
             return this;
         }
 
         @Override
-        public ModulesStep withSystemName(Systems systemName) {
-            this.systemName = systemName;
-            return this;
-        }
-
-        @Override
-        public DateCreatedStep withModules(List<String> modules) {
-            this.modules = modules;
+        public DateCreatedStep withPermissionRequired(
+            Map<Systems, List<String>> permissionRequired) {
+            this.permissionRequired = permissionRequired;
             return this;
         }
 
@@ -194,32 +195,31 @@ public class AccessRequest {
         }
 
         @Override
-        public OtherInputStep withIsDeleted(boolean isDeleted) {
+        public RemarksStep withIsDeleted(boolean isDeleted) {
             this.isDeleted = isDeleted;
             return this;
         }
 
         @Override
-        public BuildStep withOtherInput(String otherInput) {
-            this.otherInput = otherInput;
+        public BuildStep withRemarks(String remarks) {
+            this.remarks = remarks;
             return this;
         }
 
         @Override
         public AccessRequest build() {
             return new AccessRequest(
-                    this.id,
-                    this.emailId,
-                    this.department,
-                    this.subDepartment,
-                    this.approvingManager,
-                    this.companyName,
-                    this.systemName,
-                    this.modules,
-                    this.dateCreated,
-                    this.status,
-                    this.isDeleted,
-                    this.otherInput
+                this.id,
+                this.emailId,
+                this.department,
+                this.subDepartment,
+                this.approvingManager,
+                this.companyName,
+                this.permissionRequired,
+                this.dateCreated,
+                this.status,
+                this.isDeleted,
+                this.remarks
             );
         }
     }

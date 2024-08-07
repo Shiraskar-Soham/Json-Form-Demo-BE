@@ -51,17 +51,6 @@ public class JsonController {
         jsonService.addModules(systemModule);
     }
 
-    @CrossOrigin(origins = "http://localhost:3000")
-    @GetMapping ("getRMS")
-    public Map<String, String> getRMS(@RequestParam String emailID, @RequestParam String approvingManager) {
-        return jsonService.getRMS(emailID, approvingManager);
-    }
-
-    @PostMapping("deleteModule")
-    public void deleteModule(@RequestParam String system_name, @RequestParam String module) throws Exception {
-        jsonService.deleteModule(system_name, module);
-    }
-
 }
 
 
