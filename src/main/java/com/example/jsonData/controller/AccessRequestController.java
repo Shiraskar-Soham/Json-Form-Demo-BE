@@ -24,11 +24,13 @@ public class AccessRequestController {
         return accessRequestService.addRequest(accessRequestDto);
     }
 
+    @CrossOrigin(origins = "http://localhost:3000")
     @GetMapping("getAll")
     public List<AccessRequest> getAll(){
         return accessRequestService.getAll();
     }
 
+    @CrossOrigin(origins = "http://localhost:3000")
     @GetMapping("getAccessRequestListings")
     public List<AccessRequestListingDto> getAllListing(){
         return accessRequestService.getAllListing();
