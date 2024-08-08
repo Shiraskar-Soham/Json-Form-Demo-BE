@@ -37,7 +37,7 @@ public class AccessRequest {
     @Column(name= "approvingManager", nullable = false)
     private String approvingManager;
 
-    @Column(name= "companyName", nullable = false)
+    @Column(name= "companyNameRequest", nullable = false)
     @Enumerated(EnumType.STRING)
     private Company companyName;
     
@@ -48,15 +48,41 @@ public class AccessRequest {
     @Column(name= "dateCreated", nullable = false)
     private Long dateCreated;
 
-    @Column(name="status", nullable = false)
+    @Column(name="approveStatus", nullable = false)
     @Enumerated(EnumType.STRING)
-    private Status status;
+    private Status approveStatus;
 
     @Column(name="isDeleted", nullable = false)
     private boolean isDeleted;
 
-    @Column(name="remarks", nullable = true)
-    private String remarks;
+    @Column(name="requestRemarks", nullable = false)
+    private String requestRemarks;
+    
+    @Column(name="employeeName", nullable = false)
+    private String employeeName;
+    
+    @Column(name="managerName", nullable = false)
+    private String managerName;
+    
+    @Column(name="controlTowerStatus", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private Status controlTowerStatus;
+
+    @Column(name= "dateApproved", nullable = true)
+    private Long dateApproved;
+
+    @Column(name= "dateCompleted", nullable = true)
+    private Long dateCompleted;
+    
+    @Column(name = "employeeCompany", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private Company employeeCompany;
+
+    @Column(name="approveRemarks", nullable = true)
+    private String approveRemarks;
+
+    @Column(name="reviewRemarks", nullable = true)
+    private String reviewRemarks;
 
     public static interface IdStep {
         EmailIdStep withId(Long id);
@@ -87,50 +113,77 @@ public class AccessRequest {
     }
 
     public static interface DateCreatedStep {
-        StatusStep withDateCreated(Long dateCreated);
+        ApproveStatusStep withDateCreated(Long dateCreated);
     }
 
-    public static interface StatusStep {
-        IsDeletedStep withStatus(Status status);
+    public static interface ApproveStatusStep {
+        IsDeletedStep withApproveStatus(Status approveStatus);
     }
 
     public static interface IsDeletedStep {
-        RemarksStep withIsDeleted(boolean isDeleted);
+        RequestRemarksStep withIsDeleted(boolean isDeleted);
     }
 
-    public static interface RemarksStep {
-        BuildStep withRemarks(String remarks);
+    public static interface RequestRemarksStep {
+        EmployeeNameStep withRequestRemarks(String requestRemarks);
+    }
+
+    public static interface EmployeeNameStep {
+        ManagerNameStep withEmployeeName(String employeeName);
+    }
+
+    public static interface ManagerNameStep {
+        ControlTowerStatusStep withManagerName(String managerName);
+    }
+
+    public static interface ControlTowerStatusStep {
+        DateApprovedStep withControlTowerStatus(Status controlTowerStatus);
+    }
+
+    public static interface DateApprovedStep {
+        DateCompletedStep withDateApproved(Long dateApproved);
+    }
+
+    public static interface DateCompletedStep {
+        EmployeeCompanyStep withDateCompleted(Long dateCompleted);
+    }
+
+    public static interface EmployeeCompanyStep {
+        ApproveRemarksStep withEmployeeCompany(Company employeeCompany);
+    }
+
+    public static interface ApproveRemarksStep {
+        ReviewRemarksStep withApproveRemarks(String approveRemarks);
+    }
+
+    public static interface ReviewRemarksStep {
+        BuildStep withReviewRemarks(String reviewRemarks);
     }
 
     public static interface BuildStep {
         AccessRequest build();
     }
 
-    public static class Builder
-        implements IdStep, EmailIdStep, DepartmentStep, SubDepartmentStep, ApprovingManagerStep,
-        CompanyNameStep, PermissionRequiredStep, DateCreatedStep, StatusStep, IsDeletedStep,
-        RemarksStep, BuildStep {
+    public static class Builder implements IdStep, EmailIdStep, DepartmentStep, SubDepartmentStep, ApprovingManagerStep, CompanyNameStep, PermissionRequiredStep, DateCreatedStep, ApproveStatusStep, IsDeletedStep, RequestRemarksStep, EmployeeNameStep, ManagerNameStep, ControlTowerStatusStep, DateApprovedStep, DateCompletedStep, EmployeeCompanyStep, ApproveRemarksStep, ReviewRemarksStep, BuildStep {
         private Long id;
-
         private String emailId;
-
         private String department;
-
         private String subDepartment;
-
         private String approvingManager;
-
         private Company companyName;
-
         private Map<Systems, List<String>> permissionRequired;
-
         private Long dateCreated;
-
-        private Status status;
-
+        private Status approveStatus;
         private boolean isDeleted;
-
-        private String remarks;
+        private String requestRemarks;
+        private String employeeName;
+        private String managerName;
+        private Status controlTowerStatus;
+        private Long dateApproved;
+        private Long dateCompleted;
+        private Company employeeCompany;
+        private String approveRemarks;
+        private String reviewRemarks;
 
         private Builder() {
         }
@@ -176,50 +229,105 @@ public class AccessRequest {
         }
 
         @Override
-        public DateCreatedStep withPermissionRequired(
-            Map<Systems, List<String>> permissionRequired) {
+        public DateCreatedStep withPermissionRequired(Map<Systems, List<String>> permissionRequired) {
             this.permissionRequired = permissionRequired;
             return this;
         }
 
         @Override
-        public StatusStep withDateCreated(Long dateCreated) {
+        public ApproveStatusStep withDateCreated(Long dateCreated) {
             this.dateCreated = dateCreated;
             return this;
         }
 
         @Override
-        public IsDeletedStep withStatus(Status status) {
-            this.status = status;
+        public IsDeletedStep withApproveStatus(Status approveStatus) {
+            this.approveStatus = approveStatus;
             return this;
         }
 
         @Override
-        public RemarksStep withIsDeleted(boolean isDeleted) {
+        public RequestRemarksStep withIsDeleted(boolean isDeleted) {
             this.isDeleted = isDeleted;
             return this;
         }
 
         @Override
-        public BuildStep withRemarks(String remarks) {
-            this.remarks = remarks;
+        public EmployeeNameStep withRequestRemarks(String requestRemarks) {
+            this.requestRemarks = requestRemarks;
+            return this;
+        }
+
+        @Override
+        public ManagerNameStep withEmployeeName(String employeeName) {
+            this.employeeName = employeeName;
+            return this;
+        }
+
+        @Override
+        public ControlTowerStatusStep withManagerName(String managerName) {
+            this.managerName = managerName;
+            return this;
+        }
+
+        @Override
+        public DateApprovedStep withControlTowerStatus(Status controlTowerStatus) {
+            this.controlTowerStatus = controlTowerStatus;
+            return this;
+        }
+
+        @Override
+        public DateCompletedStep withDateApproved(Long dateApproved) {
+            this.dateApproved = dateApproved;
+            return this;
+        }
+
+        @Override
+        public EmployeeCompanyStep withDateCompleted(Long dateCompleted) {
+            this.dateCompleted = dateCompleted;
+            return this;
+        }
+
+        @Override
+        public ApproveRemarksStep withEmployeeCompany(Company employeeCompany) {
+            this.employeeCompany = employeeCompany;
+            return this;
+        }
+
+        @Override
+        public ReviewRemarksStep withApproveRemarks(String approveRemarks) {
+            this.approveRemarks = approveRemarks;
+            return this;
+        }
+
+        @Override
+        public BuildStep withReviewRemarks(String reviewRemarks) {
+            this.reviewRemarks = reviewRemarks;
             return this;
         }
 
         @Override
         public AccessRequest build() {
             return new AccessRequest(
-                this.id,
-                this.emailId,
-                this.department,
-                this.subDepartment,
-                this.approvingManager,
-                this.companyName,
-                this.permissionRequired,
-                this.dateCreated,
-                this.status,
-                this.isDeleted,
-                this.remarks
+                    this.id,
+                    this.emailId,
+                    this.department,
+                    this.subDepartment,
+                    this.approvingManager,
+                    this.companyName,
+                    this.permissionRequired,
+                    this.dateCreated,
+                    this.approveStatus,
+                    this.isDeleted,
+                    this.requestRemarks,
+                    this.employeeName,
+                    this.managerName,
+                    this.controlTowerStatus,
+                    this.dateApproved,
+                    this.dateCompleted,
+                    this.employeeCompany,
+                    this.approveRemarks,
+                    this.reviewRemarks
             );
         }
     }

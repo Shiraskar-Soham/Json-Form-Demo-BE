@@ -2,6 +2,8 @@ package com.example.jsonData.controller;
 
 import com.example.jsonData.domain.AccessRequest;
 import com.example.jsonData.dto.AccessRequestDto;
+import com.example.jsonData.dto.AccessRequestListingDto;
+import com.example.jsonData.exceptions.CustomException;
 import com.example.jsonData.service.AccessRequestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -18,12 +20,17 @@ public class AccessRequestController {
 
     @CrossOrigin(origins = "http://localhost:3000")
     @PostMapping("submit")
-    public Long addRequest(@RequestBody AccessRequestDto accessRequestDto) throws Exception {
+    public Long addRequest(@RequestBody AccessRequestDto accessRequestDto) throws CustomException {
         return accessRequestService.addRequest(accessRequestDto);
     }
 
     @GetMapping("getAll")
     public List<AccessRequest> getAll(){
         return accessRequestService.getAll();
+    }
+
+    @GetMapping("getAccessRequestListings")
+    public List<AccessRequestListingDto> getAllListing(){
+        return accessRequestService.getAllListing();
     }
 }
