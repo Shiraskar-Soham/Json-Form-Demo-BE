@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -63,5 +62,44 @@ public class AccessRequestService {
             convertedList.add(dto);
         }
         return convertedList;
+    }
+
+    public AccessRequestListingDto managerApproval(Long id, Status approval, String remarks) throws Exception {
+        if(ObjectUtils.isEmpty(id)){
+            throw new Exception("id cannot be empty");
+        }
+        AccessRequest accessRequest = accessRequestRepo.findByAccessRequestId(id);
+        if(ObjectUtils.isEmpty(accessRequest)) {
+            throw new Exception("No access request found");
+        }
+
+
+        if(accessRequest.getApproveStatus()!=Status.PENDING){
+            throw new Exception("This request is already approved/rejected");
+        }
+        accessRequest.setApproveStatus(approval);
+        accessRequest.setApproveRemarks(remarks);
+        accessRequest.setDateApproved(System.currentTimeMillis());
+        accessRequestRepo.save(accessRequest);
+        return accessRequestListingDTOConverter.convert(accessRequest);
+    }
+
+    public AccessRequestListingDto completeRequest(Long id, Status approval, String remarks) throws Exception {
+        if(ObjectUtils.isEmpty(id)){
+            throw new Exception("id cannot be empty");
+        }
+        AccessRequest accessRequest = accessRequestRepo.findByAccessRequestId(id);
+        if(ObjectUtils.isEmpty(accessRequest)) {
+            throw new Exception("No access request found");
+        }
+
+        if(accessRequest.getControlTowerStatus()!=Status.PENDING){
+            throw new Exception("This request is already approved/rejected");
+        }
+        accessRequest.setControlTowerStatus(approval);
+        accessRequest.setReviewRemarks(remarks);
+        accessRequest.setDateCompleted(System.currentTimeMillis());
+        accessRequestRepo.save(accessRequest);
+        return accessRequestListingDTOConverter.convert(accessRequest);
     }
 }

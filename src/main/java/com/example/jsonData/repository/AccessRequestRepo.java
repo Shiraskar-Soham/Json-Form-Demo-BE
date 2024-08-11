@@ -8,6 +8,8 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface AccessRequestRepo extends JpaRepository<AccessRequest, String> {
+public interface AccessRequestRepo extends JpaRepository<AccessRequest, Long> {
 
+    @Query(value = "SELECT * FROM access_request where id=?1", nativeQuery = true)
+    AccessRequest findByAccessRequestId(Long id);
 }

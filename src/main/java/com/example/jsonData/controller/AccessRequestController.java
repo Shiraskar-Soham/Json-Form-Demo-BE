@@ -3,6 +3,7 @@ package com.example.jsonData.controller;
 import com.example.jsonData.domain.AccessRequest;
 import com.example.jsonData.dto.AccessRequestDto;
 import com.example.jsonData.dto.AccessRequestListingDto;
+import com.example.jsonData.enums.Status;
 import com.example.jsonData.exceptions.CustomException;
 import com.example.jsonData.service.AccessRequestService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,5 +35,17 @@ public class AccessRequestController {
     @GetMapping("getAccessRequestListings")
     public List<AccessRequestListingDto> getAllListing(){
         return accessRequestService.getAllListing();
+    }
+
+    @CrossOrigin(origins = "http://localhost:3000")
+    @PostMapping("approve")
+    public AccessRequestListingDto managerApproval(@RequestParam Long id, @RequestParam Status approval, @RequestParam String remarks) throws Exception {
+        return accessRequestService.managerApproval(id, approval, remarks);
+    }
+
+    @CrossOrigin(origins = "http://localhost:3000")
+    @PostMapping("complete")
+    public AccessRequestListingDto completeRequest(@RequestParam Long id, @RequestParam Status approval, @RequestParam String remarks) throws Exception {
+        return accessRequestService.completeRequest(id, approval, remarks);
     }
 }
