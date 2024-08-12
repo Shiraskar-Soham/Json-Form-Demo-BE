@@ -64,7 +64,7 @@ public class AccessRequestService {
         return convertedList;
     }
 
-    public AccessRequestListingDto managerApproval(Long id, Status approval, String remarks) throws Exception {
+    public AccessRequestListingDto managerApproval(Long id, Status action, String remarks) throws Exception {
         if(ObjectUtils.isEmpty(id)){
             throw new Exception("id cannot be empty");
         }
@@ -77,7 +77,7 @@ public class AccessRequestService {
         if(accessRequest.getApproveStatus()!=Status.PENDING){
             throw new Exception("This request is already approved/rejected");
         }
-        accessRequest.setApproveStatus(approval);
+        accessRequest.setApproveStatus(action);
         accessRequest.setApproveRemarks(remarks);
         accessRequest.setDateApproved(System.currentTimeMillis());
         accessRequestRepo.save(accessRequest);

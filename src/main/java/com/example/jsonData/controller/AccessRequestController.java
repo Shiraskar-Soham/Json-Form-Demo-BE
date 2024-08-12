@@ -38,9 +38,9 @@ public class AccessRequestController {
     }
 
     @CrossOrigin(origins = "http://localhost:3000")
-    @PostMapping("approve")
-    public AccessRequestListingDto managerApproval(@RequestParam Long id, @RequestParam Status approval, @RequestParam String remarks) throws Exception {
-        return accessRequestService.managerApproval(id, approval, remarks);
+    @PostMapping("status")
+    public AccessRequestListingDto managerApproval(@RequestParam Long id, @RequestParam Status action, @RequestParam String remarks) throws Exception {
+        return accessRequestService.managerApproval(id, action, remarks);
     }
 
     @CrossOrigin(origins = "http://localhost:3000")
