@@ -9,6 +9,7 @@ import com.example.jsonData.enums.Status;
 import com.example.jsonData.enums.Systems;
 import com.example.jsonData.exceptions.CustomException;
 import com.example.jsonData.repository.AccessRequestRepo;
+import jakarta.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
@@ -32,7 +33,7 @@ public class AccessRequestService {
     @Autowired
     private EmailService emailService;
 
-    public Long addRequest(AccessRequestDto accessRequestDto) throws CustomException {
+    public Long addRequest(AccessRequestDto accessRequestDto) throws CustomException, MessagingException {
         if (ObjectUtils.isEmpty(accessRequestDto)) {
             throw new CustomException("Access Request Not valid");
         }
@@ -40,6 +41,7 @@ public class AccessRequestService {
         if (ObjectUtils.isEmpty(systemsListMap)) {
             throw new CustomException("Modules can not be empty");
         }
+        systemsListMap.entrySet().removeIf(entry -> entry.getValue() == null || entry.getValue().isEmpty());
         boolean allListsEmpty = systemsListMap.values().stream().allMatch(List::isEmpty);
         if (allListsEmpty) {
             throw new CustomException("All module lists cannot be empty");
@@ -48,6 +50,49 @@ public class AccessRequestService {
         accessRequest.setApproveStatus(Status.PENDING);
         accessRequest.setDateCreated(System.currentTimeMillis());
         accessRequestRepo.save(accessRequest);
+        String htmlContent = "<html>" +
+                "<head>" +
+                "<style>" +
+                "body { font-family: Arial, sans-serif; line-height: 1.6; }" +
+                ".container { max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #ddd; border-radius: 5px; background-color: #f9f9f9; }" +
+                ".header { font-size: 18px; font-weight: bold; margin-bottom: 20px; }" +
+                ".content { margin-bottom: 20px; }" +
+                ".footer { font-size: 12px; color: #777; margin-top: 30px; }" +
+                ".btn { display: inline-block; padding: 10px 20px; color: #fff; background-color: #007bff; text-decoration: none; border-radius: 5px; margin-top: 20px; }" +
+                "</style>" +
+                "</head>" +
+                "<body>" +
+                "<div class='container'>" +
+                "<div class='header'>" +
+                "Access Request Approval Required: ${userName} - ${systemModuleName}" +
+                "</div>" +
+                "<div class='content'>" +
+                "<p>Dear Sir/Mam,</p>" +
+                "<p>${userName} has requested access to the following system/module(s):</p>" +
+                "<ul>" +
+                "<li><strong>Company:</strong> ${companyName}</li>" +
+                "<li><strong>System:</strong> ${systemName}</li>" +
+                "<li><strong>Module(s):</strong> ${selectedModules}</li>" +
+                "<li><strong>Remarks:</strong> ${userRemarks}</li>" +
+                "</ul>" +
+                "<p>We kindly ask for your approval of this request.</p>" +
+                "<a href='${approvalLink}' class='btn'>Click here to approve or reject</a>" +
+                "</div>" +
+                "<div class='footer'>" +
+                "<p>Note: Please review the details and approve or reject.</p>" +
+                "</div>" +
+                "<p>Thanks,</p>" +
+                "</div>" +
+                "</body>" +
+                "</html>";
+        htmlContent = htmlContent.replace("${userName}",accessRequest.getEmployeeName());
+        htmlContent = htmlContent.replace("${systemModuleName}",accessRequest.getCompanyName().name());
+        htmlContent = htmlContent.replace("${companyName}", accessRequest.getCompanyName().name());
+        htmlContent = htmlContent.replace("${systemName}", accessRequestDto.getModules().keySet().toString());
+        htmlContent = htmlContent.replace("${selectedModules}",accessRequestDto.getModules().values().toString());
+        htmlContent = htmlContent.replace("${userRemarks}",accessRequest.getRequestRemarks());
+        htmlContent = htmlContent.replace("${approvalLink}","http://localhost:3000/");
+        emailService.sendRichEmail(accessRequest.getEmailId(), "Access Request Approval Required: " + accessRequest.getEmployeeName(), htmlContent);
         return accessRequest.getId();
     }
 
@@ -63,20 +108,18 @@ public class AccessRequestService {
             AccessRequestListingDto dto = accessRequestListingDTOConverter.convert(accessRequest);
             convertedList.add(dto);
         }
-        AccessRequestListingDto accessRequest = convertedList.getLast();
-        emailService.sendMail(accessRequest.getEmailId(),accessRequest.getEmployeeName() +  " " + " has requested to approve the following request", "Access Request Approval Required: " + accessRequest.getEmployeeName());
         return convertedList;
     }
 
     public AccessRequestListingDto managerApproval(Long id, Status action, String remarks) throws Exception {
-        if(ObjectUtils.isEmpty(id)){
+        if (ObjectUtils.isEmpty(id)) {
             throw new Exception("id cannot be empty");
         }
         AccessRequest accessRequest = accessRequestRepo.findByAccessRequestId(id);
-        if(ObjectUtils.isEmpty(accessRequest)) {
+        if (ObjectUtils.isEmpty(accessRequest)) {
             throw new Exception("No access request found");
         }
-        if(accessRequest.getApproveStatus()!=Status.PENDING){
+        if (accessRequest.getApproveStatus() != Status.PENDING) {
             throw new Exception("This request is already approved/rejected");
         }
         accessRequest.setApproveStatus(action);
@@ -87,14 +130,14 @@ public class AccessRequestService {
     }
 
     public AccessRequestListingDto completeRequest(Long id, Status approval, String remarks) throws Exception {
-        if(ObjectUtils.isEmpty(id)){
+        if (ObjectUtils.isEmpty(id)) {
             throw new Exception("id cannot be empty");
         }
         AccessRequest accessRequest = accessRequestRepo.findByAccessRequestId(id);
-        if(ObjectUtils.isEmpty(accessRequest)) {
+        if (ObjectUtils.isEmpty(accessRequest)) {
             throw new Exception("No access request found");
         }
-        if(accessRequest.getControlTowerStatus()!=Status.PENDING){
+        if (accessRequest.getControlTowerStatus() != Status.PENDING) {
             throw new Exception("This request is already approved/rejected");
         }
         accessRequest.setControlTowerStatus(approval);

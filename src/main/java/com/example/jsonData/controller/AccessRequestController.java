@@ -6,6 +6,7 @@ import com.example.jsonData.dto.AccessRequestListingDto;
 import com.example.jsonData.enums.Status;
 import com.example.jsonData.exceptions.CustomException;
 import com.example.jsonData.service.AccessRequestService;
+import jakarta.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,7 +22,7 @@ public class AccessRequestController {
 
     @CrossOrigin(origins = "http://localhost:3000")
     @PostMapping("submit")
-    public Long addRequest(@RequestBody AccessRequestDto accessRequestDto) throws CustomException {
+    public Long addRequest(@RequestBody AccessRequestDto accessRequestDto) throws CustomException, MessagingException {
         return accessRequestService.addRequest(accessRequestDto);
     }
 
@@ -33,7 +34,7 @@ public class AccessRequestController {
 
     @CrossOrigin(origins = "http://localhost:3000")
     @GetMapping("getAccessRequestListings")
-    public List<AccessRequestListingDto> getAllListing(){
+    public List<AccessRequestListingDto> getAllListing() {
         return accessRequestService.getAllListing();
     }
 
