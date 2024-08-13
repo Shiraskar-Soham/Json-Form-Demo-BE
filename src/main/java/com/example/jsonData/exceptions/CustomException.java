@@ -1,6 +1,7 @@
 package com.example.jsonData.exceptions;
 
 public class CustomException extends Exception {
+
     private Exception rootException;
 
     public CustomException(String message) {
