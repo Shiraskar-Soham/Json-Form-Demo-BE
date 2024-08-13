@@ -29,6 +29,9 @@ public class AccessRequestService {
     @Autowired
     private AccessRequestDtoConvertor accessRequestDtoConvertor;
 
+    @Autowired
+    private EmailService emailService;
+
     public Long addRequest(AccessRequestDto accessRequestDto) throws CustomException {
         if (ObjectUtils.isEmpty(accessRequestDto)) {
             throw new CustomException("Access Request Not valid");
@@ -41,7 +44,6 @@ public class AccessRequestService {
         if (allListsEmpty) {
             throw new CustomException("All module lists cannot be empty");
         }
-
         AccessRequest accessRequest = accessRequestDtoConvertor.convert(accessRequestDto);
         accessRequest.setApproveStatus(Status.PENDING);
         accessRequest.setDateCreated(System.currentTimeMillis());
@@ -61,6 +63,8 @@ public class AccessRequestService {
             AccessRequestListingDto dto = accessRequestListingDTOConverter.convert(accessRequest);
             convertedList.add(dto);
         }
+        AccessRequestListingDto accessRequest = convertedList.getLast();
+        emailService.sendMail(accessRequest.getEmailId(),accessRequest.getEmployeeName() +  " " + " has requested to approve the following request", "Access Request Approval Required: " + accessRequest.getEmployeeName());
         return convertedList;
     }
 
@@ -72,8 +76,6 @@ public class AccessRequestService {
         if(ObjectUtils.isEmpty(accessRequest)) {
             throw new Exception("No access request found");
         }
-
-
         if(accessRequest.getApproveStatus()!=Status.PENDING){
             throw new Exception("This request is already approved/rejected");
         }
@@ -92,7 +94,6 @@ public class AccessRequestService {
         if(ObjectUtils.isEmpty(accessRequest)) {
             throw new Exception("No access request found");
         }
-
         if(accessRequest.getControlTowerStatus()!=Status.PENDING){
             throw new Exception("This request is already approved/rejected");
         }
