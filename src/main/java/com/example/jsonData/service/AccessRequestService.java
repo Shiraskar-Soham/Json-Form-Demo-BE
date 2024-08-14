@@ -58,7 +58,7 @@ public class AccessRequestService {
                 ".header { font-size: 18px; font-weight: bold; margin-bottom: 20px; }" +
                 ".content { margin-bottom: 20px; }" +
                 ".footer { font-size: 12px; color: #777; margin-top: 30px; }" +
-                ".btn { display: inline-block; padding: 10px 20px; color: #fff; background-color: #007bff; text-decoration: none; border-radius: 5px; margin-top: 20px; }" +
+                ".btn { display: inline-block; padding: 10px 20px; color: white; background-color: greenyellow; text-decoration: none; border-radius: 5px; margin-top: 20px; }" +
                 "</style>" +
                 "</head>" +
                 "<body>" +
@@ -81,18 +81,18 @@ public class AccessRequestService {
                 "<div class='footer'>" +
                 "<p>Note: Please review the details and approve or reject.</p>" +
                 "</div>" +
-                "<p>Thanks,</p>" +
+                "<p>Thanks.</p>" +
                 "</div>" +
                 "</body>" +
                 "</html>";
         htmlContent = htmlContent.replace("${userName}",accessRequest.getEmployeeName());
-        htmlContent = htmlContent.replace("${systemModuleName}",accessRequest.getCompanyName().name());
+        htmlContent = htmlContent.replace("${systemModuleName}",accessRequestDto.getModules().keySet().toString());
         htmlContent = htmlContent.replace("${companyName}", accessRequest.getCompanyName().name());
         htmlContent = htmlContent.replace("${systemName}", accessRequestDto.getModules().keySet().toString());
         htmlContent = htmlContent.replace("${selectedModules}",accessRequestDto.getModules().values().toString());
         htmlContent = htmlContent.replace("${userRemarks}",accessRequest.getRequestRemarks());
         htmlContent = htmlContent.replace("${approvalLink}","http://localhost:3000/");
-        emailService.sendRichEmail(accessRequest.getEmailId(), "Access Request Approval Required: " + accessRequest.getEmployeeName(), htmlContent);
+        emailService.sendRichEmail(accessRequest.getEmailId(), "Access Request Approval Required: " + accessRequest.getEmployeeName() + "-" +accessRequest.getPermissionRequired().keySet().toString(), htmlContent);
         return accessRequest.getId();
     }
 
@@ -126,6 +126,43 @@ public class AccessRequestService {
         accessRequest.setApproveRemarks(remarks);
         accessRequest.setDateApproved(System.currentTimeMillis());
         accessRequestRepo.save(accessRequest);
+        String htmlContent = "<html>" +
+                "<head>" +
+                "<style>" +
+                "body { font-family: Arial, sans-serif; line-height: 1.6; }" +
+                ".container { max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #ddd; border-radius: 5px; background-color: #f9f9f9; }" +
+                ".header { font-size: 18px; font-weight: bold; margin-bottom: 20px; }" +
+                ".content { margin-bottom: 20px; }" +
+                ".footer { font-size: 12px; color: #777; margin-top: 30px; }" +
+                ".btn { display: inline-block; padding: 10px 20px; color: white; background-color: greenyellow; text-decoration: none; border-radius: 5px; margin-top: 20px; }" +
+                "</style>" +
+                "</head>" +
+                "<body>" +
+                "<div class='container'>" +
+                "<div class='header'>" +
+                "Access Request Approval Required: ${userName} - ${systemModuleName}" +
+                "</div>" +
+                "<div class='content'>" +
+                "<p>Dear ${userName} and System Review Team,</p>" +
+                "We would like to inform you that your request for access to the following system/module(s) has been ${managerApprovalStatus} by ${approverName}</p>" +
+                "<p></p>" +
+                "<a href='${approvalLink}' class='btn'>Click on the link</a>" +
+                "</div>" +
+                "<div class='footer'>" +
+                "<p>Note: Please review the details.</p>" +
+                "</div>" +
+                "<p>Thanks.</p>" +
+                "</div>" +
+                "</body>" +
+                "</html>";
+        htmlContent = htmlContent.replace("${userName}",accessRequest.getEmployeeName());
+        htmlContent = htmlContent.replace("${systemModuleName}",accessRequest.getPermissionRequired().keySet().toString());
+        htmlContent = htmlContent.replace("${approverName}",accessRequest.getApprovingManager());
+        htmlContent = htmlContent.replace("${managerApprovalStatus}", accessRequest.getApproveStatus().toString());
+        htmlContent = htmlContent.replace("${approvalLink}","http://localhost:3000/");
+
+        emailService.sendRichEmail(accessRequest.getEmailId(), "Access Request Approval Required: " + accessRequest.getEmployeeName() + "-" +accessRequest.getPermissionRequired().keySet().toString(), htmlContent);
+
         return accessRequestListingDTOConverter.convert(accessRequest);
     }
 
@@ -144,6 +181,43 @@ public class AccessRequestService {
         accessRequest.setReviewRemarks(remarks);
         accessRequest.setDateCompleted(System.currentTimeMillis());
         accessRequestRepo.save(accessRequest);
+        String htmlContent = "<html>" +
+                "<head>" +
+                "<style>" +
+                "body { font-family: Arial, sans-serif; line-height: 1.6; }" +
+                ".container { max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #ddd; border-radius: 5px; background-color: #f9f9f9; }" +
+                ".header { font-size: 18px; font-weight: bold; margin-bottom: 20px; }" +
+                ".content { margin-bottom: 20px; }" +
+                ".footer { font-size: 12px; color: #777; margin-top: 30px; }" +
+                ".btn { display: inline-block; padding: 10px 20px; color: white; background-color: greenyellow; text-decoration: none; border-radius: 5px; margin-top: 20px; }" +
+                "</style>" +
+                "</head>" +
+                "<body>" +
+                "<div class='container'>" +
+                "<div class='header'>" +
+                "Access Request Approval Required: ${userName} - ${systemModuleName}" +
+                "</div>" +
+                "<div class='content'>" +
+                "<p>Dear ${userName} and System Review Team,</p>" +
+                "Your Requested has been ${managerApprovalStatus} and thus marked as completed by ${approverName}</p>" +
+                "<p></p>" +
+                "<a href='${approvalLink}' class='btn'>Click on the link</a>" +
+                "</div>" +
+                "<div class='footer'>" +
+                "<p>Note: Please review the details.</p>" +
+                "</div>" +
+                "<p>Thanks.</p>" +
+                "</div>" +
+                "</body>" +
+                "</html>";
+        htmlContent = htmlContent.replace("${userName}",accessRequest.getEmployeeName());
+        htmlContent = htmlContent.replace("${systemModuleName}",accessRequest.getPermissionRequired().keySet().toString());
+        htmlContent = htmlContent.replace("${approverName}",accessRequest.getApprovingManager());
+        htmlContent = htmlContent.replace("${managerApprovalStatus}", accessRequest.getApproveStatus().toString());
+        htmlContent = htmlContent.replace("${approvalLink}","http://localhost:3000/");
+
+        emailService.sendRichEmail(accessRequest.getEmailId(), "Access Request Approval Required: " + accessRequest.getEmployeeName() + "-" +accessRequest.getPermissionRequired().keySet().toString(), htmlContent);
+
         return accessRequestListingDTOConverter.convert(accessRequest);
     }
 }
