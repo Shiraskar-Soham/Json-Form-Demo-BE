@@ -19,6 +19,8 @@ import java.util.List;
 import java.util.Map;
 import org.springframework.util.StringUtils;
 
+import static com.example.jsonData.enums.Status.*;
+
 @Service
 public class AccessRequestService {
 
@@ -48,7 +50,7 @@ public class AccessRequestService {
             throw new CustomException("All module lists cannot be empty");
         }
         AccessRequest accessRequest = accessRequestDtoConvertor.convert(accessRequestDto);
-        accessRequest.setApproveStatus(Status.PENDING);
+        accessRequest.setApproveStatus(PENDING);
         accessRequest.setDateCreated(System.currentTimeMillis());
         accessRequestRepo.save(accessRequest);
         String htmlContent = "<html>" +
@@ -105,8 +107,10 @@ public class AccessRequestService {
         List<AccessRequest> e = new ArrayList<>();
         if (StringUtils.isEmpty(listingStatus)) {
             e = accessRequestRepo.findAll();
+        } else if (listingStatus.equals("COMPLETED")) {
+            e = accessRequestRepo.findByControlTowerStatusNot(PENDING);
         } else {
-            //Complete this logic
+            e = accessRequestRepo.findByApproveStatus(Status.valueOf(listingStatus));
         }
         List<AccessRequestListingDto> convertedList = new ArrayList<>();
         for (AccessRequest accessRequest : e) {
@@ -124,7 +128,7 @@ public class AccessRequestService {
         if (ObjectUtils.isEmpty(accessRequest)) {
             throw new Exception("No access request found");
         }
-        if (accessRequest.getApproveStatus() != Status.PENDING) {
+        if (accessRequest.getApproveStatus() != PENDING) {
             throw new Exception("This request is already approved/rejected");
         }
         accessRequest.setApproveStatus(action);
@@ -179,7 +183,7 @@ public class AccessRequestService {
         if (ObjectUtils.isEmpty(accessRequest)) {
             throw new Exception("No access request found");
         }
-        if (accessRequest.getControlTowerStatus() != Status.PENDING) {
+        if (accessRequest.getControlTowerStatus() != PENDING) {
             throw new Exception("This request is already approved/rejected");
         }
         accessRequest.setControlTowerStatus(approval);

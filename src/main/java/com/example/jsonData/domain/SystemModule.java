@@ -6,9 +6,11 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Where;
 
 @Entity(name = "systemModule")
 @Table(name = "systemModule")
+@Where(clause = "is_deleted=0")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
