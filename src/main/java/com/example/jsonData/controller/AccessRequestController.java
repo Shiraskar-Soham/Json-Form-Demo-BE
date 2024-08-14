@@ -34,8 +34,8 @@ public class AccessRequestController {
 
     @CrossOrigin(origins = "http://localhost:3000")
     @GetMapping("getAccessRequestListings")
-    public List<AccessRequestListingDto> getAllListing() {
-        return accessRequestService.getAllListing();
+    public List<AccessRequestListingDto> getAllListing(@RequestParam(required = false) String listingStatus) {
+        return accessRequestService.getAllListing(listingStatus);
     }
 
     @CrossOrigin(origins = "http://localhost:3000")

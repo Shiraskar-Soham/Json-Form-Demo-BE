@@ -17,6 +17,7 @@ import org.springframework.util.ObjectUtils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import org.springframework.util.StringUtils;
 
 @Service
 public class AccessRequestService {
@@ -100,10 +101,14 @@ public class AccessRequestService {
         return accessRequestRepo.findAll();
     }
 
-    public List<AccessRequestListingDto> getAllListing() {
-        List<AccessRequest> e = accessRequestRepo.findAll();
+    public List<AccessRequestListingDto> getAllListing(String listingStatus) {
+        List<AccessRequest> e = new ArrayList<>();
+        if (StringUtils.isEmpty(listingStatus)) {
+            e = accessRequestRepo.findAll();
+        } else {
+            //Complete this logic
+        }
         List<AccessRequestListingDto> convertedList = new ArrayList<>();
-
         for (AccessRequest accessRequest : e) {
             AccessRequestListingDto dto = accessRequestListingDTOConverter.convert(accessRequest);
             convertedList.add(dto);
