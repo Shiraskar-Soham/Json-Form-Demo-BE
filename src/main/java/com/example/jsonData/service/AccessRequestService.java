@@ -244,11 +244,13 @@ public class AccessRequestService {
     public Map<String, Object> convertToJson(AccessRequestListingDto dto) {
         Map<String, Object> jsonData = new HashMap<>();
 
+        jsonData.put("id", String.valueOf(dto.getId()));
+
         // Header section
         Map<String, String> header = new HashMap<>();
-        header.put("Employee Name", dto.getEmployeeName());
         header.put("Sub Department", dto.getSubDepartment());
         header.put("Company Name", dto.getEmployeeCompany().name());
+        header.put("Employee Name", dto.getEmployeeName());
         jsonData.put("header", header);
 
         // Label Chips section
@@ -265,8 +267,14 @@ public class AccessRequestService {
         // Footer section
         Map<String, String> footer = new HashMap<>();
         footer.put("Remarks", dto.getRequestRemarks());
-        footer.put("Date Approved", formatDate(dto.getDateApproved()));
-        footer.put("Approving Remarks", dto.getApproveRemarks());
+        if(dto.getApprovalStatus() != PENDING) {
+            footer.put("Date Approved", formatDate(dto.getDateApproved()));
+            footer.put("Approving Remarks", dto.getApproveRemarks());
+        }
+        if (dto.getControlTowerStatus()!= PENDING){
+            footer.put("Date Completed", formatDate(dto.getDateCompleted()));
+            footer.put("Control Tower Remarks", dto.getReviewRemarks());
+        }
         jsonData.put("footer", footer);
 
         return jsonData;
