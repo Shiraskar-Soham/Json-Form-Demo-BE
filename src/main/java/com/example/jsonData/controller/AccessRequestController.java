@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("api/v1/request")
@@ -36,6 +37,12 @@ public class AccessRequestController {
     @GetMapping("getAccessRequestListings")
     public List<AccessRequestListingDto> getAllListing(@RequestParam(required = false) String listingStatus) {
         return accessRequestService.getAllListing(listingStatus);
+    }
+
+    @CrossOrigin(origins = "http://localhost:3000")
+    @GetMapping("getJsonListings")
+    public List<Map<String, Object>> getAllListing() {
+        return accessRequestService.getAllDynamicListing();
     }
 
     @CrossOrigin(origins = "http://localhost:3000")

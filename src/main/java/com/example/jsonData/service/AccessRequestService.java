@@ -14,9 +14,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.*;
+
 import org.springframework.util.StringUtils;
 
 import static com.example.jsonData.enums.Status.*;
@@ -228,5 +229,52 @@ public class AccessRequestService {
         emailService.sendRichEmail(accessRequest.getEmailId(), "Access Request Approval Required: " + accessRequest.getEmployeeName() + "-" +accessRequest.getPermissionRequired().keySet().toString(), htmlContent);
 
         return accessRequestListingDTOConverter.convert(accessRequest);
+    }
+
+    public List<Map<String, Object>> getAllDynamicListing() {
+        List<AccessRequestListingDto> list = getAllListing(null);
+        List<Map<String, Object>> result = new ArrayList<>();
+        for (AccessRequestListingDto accessRequest : list) {
+            Map<String, Object> json = convertToJson(accessRequest);
+            result.add(json);
+        }
+        return result;
+    }
+
+    public Map<String, Object> convertToJson(AccessRequestListingDto dto) {
+        Map<String, Object> jsonData = new HashMap<>();
+
+        // Header section
+        Map<String, String> header = new HashMap<>();
+        header.put("Employee Name", dto.getEmployeeName());
+        header.put("Sub Department", dto.getSubDepartment());
+        header.put("Company Name", dto.getEmployeeCompany().name());
+        jsonData.put("header", header);
+
+        // Label Chips section
+        Map<String, String> labelChips = new HashMap<>();
+        labelChips.put("Date Created", formatDate(dto.getDateCreated()));
+        labelChips.put("Email Id", dto.getEmailId());
+        labelChips.put("Manager Status", dto.getApprovalStatus().toString());
+        labelChips.put("Control Tower Status", dto.getControlTowerStatus().toString());
+        jsonData.put("labelChips", labelChips);
+
+        // Body section
+        jsonData.put("body", dto.getModules());
+
+        // Footer section
+        Map<String, String> footer = new HashMap<>();
+        footer.put("Remarks", dto.getRequestRemarks());
+        footer.put("Date Approved", formatDate(dto.getDateApproved()));
+        footer.put("Approving Remarks", dto.getApproveRemarks());
+        jsonData.put("footer", footer);
+
+        return jsonData;
+    }
+    private String formatDate(Long timestamp) {
+        if (timestamp == null) return "";
+        Date date = new Date(timestamp);
+        DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        return dateFormat.format(date);
     }
 }
