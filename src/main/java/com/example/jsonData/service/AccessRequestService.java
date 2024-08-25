@@ -5,6 +5,7 @@ import com.example.jsonData.convertor.AccessRequestListingDTOConverter;
 import com.example.jsonData.domain.AccessRequest;
 import com.example.jsonData.dto.AccessRequestDto;
 import com.example.jsonData.dto.AccessRequestListingDto;
+import com.example.jsonData.enums.DisplayNames;
 import com.example.jsonData.enums.Status;
 import com.example.jsonData.enums.Systems;
 import com.example.jsonData.exceptions.CustomException;
@@ -243,22 +244,21 @@ public class AccessRequestService {
 
     public Map<String, Object> convertToJson(AccessRequestListingDto dto) {
         Map<String, Object> jsonData = new HashMap<>();
-
         jsonData.put("id", String.valueOf(dto.getId()));
 
         // Header section
         Map<String, String> header = new HashMap<>();
-        header.put("Sub Department", dto.getSubDepartment());
-        header.put("Company Name", dto.getEmployeeCompany().name());
-        header.put("Employee Name", dto.getEmployeeName());
+        header.put(DisplayNames.SubDepartment.getDisplayName(), dto.getSubDepartment());
+        header.put(DisplayNames.CompanyName.getDisplayName(), dto.getEmployeeCompany().name());
+        header.put(DisplayNames.EmployeeName.getDisplayName(), dto.getEmployeeName());
         jsonData.put("header", header);
 
         // Label Chips section
         Map<String, String> labelChips = new HashMap<>();
-        labelChips.put("Date Created", formatDate(dto.getDateCreated()));
-        labelChips.put("Email Id", dto.getEmailId());
-        labelChips.put("Manager Status", dto.getApprovalStatus().toString());
-        labelChips.put("Control Tower Status", dto.getControlTowerStatus().toString());
+        labelChips.put(DisplayNames.DateCreated.getDisplayName(), formatDate(dto.getDateCreated()));
+        labelChips.put(DisplayNames.EmailId.getDisplayName(), dto.getEmailId());
+        labelChips.put(DisplayNames.ManagerStatus.getDisplayName(), dto.getApprovalStatus().toString());
+        labelChips.put(DisplayNames.ControlTowerStatus.getDisplayName(), dto.getControlTowerStatus().toString());
         jsonData.put("labelChips", labelChips);
 
         // Body section
@@ -268,21 +268,22 @@ public class AccessRequestService {
         Map<String, String> footer = new HashMap<>();
         footer.put("Remarks", dto.getRequestRemarks());
         if(dto.getApprovalStatus() != PENDING) {
-            footer.put("Date Approved", formatDate(dto.getDateApproved()));
-            footer.put("Approving Remarks", dto.getApproveRemarks());
+            footer.put(DisplayNames.DateApproved.getDisplayName(), formatDate(dto.getDateApproved()));
+            footer.put(DisplayNames.ApprovingRemarks.getDisplayName(), dto.getApproveRemarks());
         }
         if (dto.getControlTowerStatus()!= PENDING){
-            footer.put("Date Completed", formatDate(dto.getDateCompleted()));
-            footer.put("Control Tower Remarks", dto.getReviewRemarks());
+            footer.put(DisplayNames.DateCompleted.getDisplayName(), formatDate(dto.getDateCompleted()));
+            footer.put(DisplayNames.CTRemarks.getDisplayName(), dto.getReviewRemarks());
         }
         jsonData.put("footer", footer);
 
         return jsonData;
     }
+
     private String formatDate(Long timestamp) {
         if (timestamp == null) return "";
         Date date = new Date(timestamp);
-        DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy hh:mm a");
         return dateFormat.format(date);
     }
 }
