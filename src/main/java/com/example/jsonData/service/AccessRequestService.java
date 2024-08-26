@@ -232,8 +232,8 @@ public class AccessRequestService {
         return accessRequestListingDTOConverter.convert(accessRequest);
     }
 
-    public List<Map<String, Object>> getAllDynamicListing() {
-        List<AccessRequestListingDto> list = getAllListing(null);
+    public List<Map<String, Object>> getAllDynamicListing(String listingStatus) {
+        List<AccessRequestListingDto> list = getAllListing(listingStatus);
         List<Map<String, Object>> result = new ArrayList<>();
         for (AccessRequestListingDto accessRequest : list) {
             Map<String, Object> json = convertToJson(accessRequest);
