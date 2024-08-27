@@ -11,6 +11,7 @@ import com.example.jsonData.enums.Systems;
 import com.example.jsonData.exceptions.CustomException;
 import com.example.jsonData.repository.AccessRequestRepo;
 import jakarta.mail.MessagingException;
+import java.lang.reflect.Field;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
@@ -37,6 +38,9 @@ public class AccessRequestService {
 
     @Autowired
     private EmailService emailService;
+
+    @Autowired
+    private FormLabelService formLabelService;
 
     public Long addRequest(AccessRequestDto accessRequestDto) throws CustomException, MessagingException {
         if (ObjectUtils.isEmpty(accessRequestDto)) {
@@ -232,7 +236,8 @@ public class AccessRequestService {
         return accessRequestListingDTOConverter.convert(accessRequest);
     }
 
-    public List<Map<String, Object>> getAllDynamicListing(String listingStatus) {
+    public List<Map<String, Object>> getAllDynamicListing(String listingStatus)
+        throws CustomException {
         List<AccessRequestListingDto> list = getAllListing(listingStatus);
         List<Map<String, Object>> result = new ArrayList<>();
         for (AccessRequestListingDto accessRequest : list) {
@@ -242,41 +247,63 @@ public class AccessRequestService {
         return result;
     }
 
-    public Map<String, Object> convertToJson(AccessRequestListingDto dto) {
+    //public Map<String, Object> convertToJson(AccessRequestListingDto dto) {
+    //    Map<String, Object> jsonData = new HashMap<>();
+    //    jsonData.put("id", String.valueOf(dto.getId()));
+    //
+    //    // Header section
+    //    Map<String, String> header = new HashMap<>();
+    //    header.put(DisplayNames.SubDepartment.getDisplayName(), dto.getSubDepartment());
+    //    header.put(DisplayNames.CompanyName.getDisplayName(), dto.getEmployeeCompany().name());
+    //    header.put(DisplayNames.EmployeeName.getDisplayName(), dto.getEmployeeName());
+    //    jsonData.put("header", header);
+    //
+    //    // Label Chips section
+    //    Map<String, String> labelChips = new HashMap<>();
+    //    labelChips.put(DisplayNames.DateCreated.getDisplayName(), formatDate(dto.getDateCreated()));
+    //    labelChips.put(DisplayNames.EmailId.getDisplayName(), dto.getEmailId());
+    //    labelChips.put(DisplayNames.ManagerStatus.getDisplayName(), dto.getApprovalStatus().toString());
+    //    labelChips.put(DisplayNames.ControlTowerStatus.getDisplayName(), dto.getControlTowerStatus().toString());
+    //    jsonData.put("labelChips", labelChips);
+    //
+    //    // Body section
+    //    jsonData.put("body", dto.getModules());
+    //
+    //    // Footer section
+    //    Map<String, String> footer = new HashMap<>();
+    //    footer.put("Remarks", dto.getRequestRemarks());
+    //    if(dto.getApprovalStatus() != PENDING) {
+    //        footer.put(DisplayNames.DateApproved.getDisplayName(), formatDate(dto.getDateApproved()));
+    //        footer.put(DisplayNames.ApprovingRemarks.getDisplayName(), dto.getApproveRemarks());
+    //    }
+    //    if (dto.getControlTowerStatus()!= PENDING){
+    //        footer.put(DisplayNames.DateCompleted.getDisplayName(), formatDate(dto.getDateCompleted()));
+    //        footer.put(DisplayNames.CTRemarks.getDisplayName(), dto.getReviewRemarks());
+    //    }
+    //    jsonData.put("footer", footer);
+    //
+    //    return jsonData;
+    //}
+
+    public Map<String, Object> convertToJson(AccessRequestListingDto dto) throws CustomException {
+        Map<String, String> labelsFromDb = formLabelService.getAllLabels();
         Map<String, Object> jsonData = new HashMap<>();
-        jsonData.put("id", String.valueOf(dto.getId()));
+        for (Map.Entry<String, String> entry : labelsFromDb.entrySet()) {
+            String fieldKey = entry.getKey();
+            String label = entry.getValue();
 
-        // Header section
-        Map<String, String> header = new HashMap<>();
-        header.put(DisplayNames.SubDepartment.getDisplayName(), dto.getSubDepartment());
-        header.put(DisplayNames.CompanyName.getDisplayName(), dto.getEmployeeCompany().name());
-        header.put(DisplayNames.EmployeeName.getDisplayName(), dto.getEmployeeName());
-        jsonData.put("header", header);
-
-        // Label Chips section
-        Map<String, String> labelChips = new HashMap<>();
-        labelChips.put(DisplayNames.DateCreated.getDisplayName(), formatDate(dto.getDateCreated()));
-        labelChips.put(DisplayNames.EmailId.getDisplayName(), dto.getEmailId());
-        labelChips.put(DisplayNames.ManagerStatus.getDisplayName(), dto.getApprovalStatus().toString());
-        labelChips.put(DisplayNames.ControlTowerStatus.getDisplayName(), dto.getControlTowerStatus().toString());
-        jsonData.put("labelChips", labelChips);
-
-        // Body section
-        jsonData.put("body", dto.getModules());
-
-        // Footer section
-        Map<String, String> footer = new HashMap<>();
-        footer.put("Remarks", dto.getRequestRemarks());
-        if(dto.getApprovalStatus() != PENDING) {
-            footer.put(DisplayNames.DateApproved.getDisplayName(), formatDate(dto.getDateApproved()));
-            footer.put(DisplayNames.ApprovingRemarks.getDisplayName(), dto.getApproveRemarks());
+            try {
+                Field field = dto.getClass().getDeclaredField(fieldKey);
+                field.setAccessible(true);
+                Object value = field.get(dto);
+                if (value instanceof Date) {
+                    value = formatDate(((Date) value).getTime());
+                }
+                jsonData.put(label, value);
+            } catch (NoSuchFieldException | IllegalAccessException e) {
+                throw new CustomException("Field not found: " + fieldKey, e);
+            }
         }
-        if (dto.getControlTowerStatus()!= PENDING){
-            footer.put(DisplayNames.DateCompleted.getDisplayName(), formatDate(dto.getDateCompleted()));
-            footer.put(DisplayNames.CTRemarks.getDisplayName(), dto.getReviewRemarks());
-        }
-        jsonData.put("footer", footer);
-
         return jsonData;
     }
 
