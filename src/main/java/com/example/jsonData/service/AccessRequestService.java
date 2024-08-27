@@ -5,7 +5,6 @@ import com.example.jsonData.convertor.AccessRequestListingDTOConverter;
 import com.example.jsonData.domain.AccessRequest;
 import com.example.jsonData.dto.AccessRequestDto;
 import com.example.jsonData.dto.AccessRequestListingDto;
-import com.example.jsonData.enums.DisplayNames;
 import com.example.jsonData.enums.Status;
 import com.example.jsonData.enums.Systems;
 import com.example.jsonData.exceptions.CustomException;
@@ -293,15 +292,17 @@ public class AccessRequestService {
             String label = entry.getValue();
 
             try {
-                Field field = dto.getClass().getDeclaredField(fieldKey);
+                Field field;
+                try {
+                    field = dto.getClass().getDeclaredField(fieldKey);
+                } catch (NoSuchFieldException e) {
+                    continue;
+                }
                 field.setAccessible(true);
                 Object value = field.get(dto);
-                if (value instanceof Date) {
-                    value = formatDate(((Date) value).getTime());
-                }
                 jsonData.put(label, value);
-            } catch (NoSuchFieldException | IllegalAccessException e) {
-                throw new CustomException("Field not found: " + fieldKey, e);
+            } catch (IllegalAccessException e) {
+                throw new CustomException("Error accessing field: " + fieldKey, e);
             }
         }
         return jsonData;
