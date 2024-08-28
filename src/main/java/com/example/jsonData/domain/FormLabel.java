@@ -21,6 +21,9 @@ public class FormLabel {
     @Column(name = "label")
     private String label;
 
+    @Column(name = "position")
+    private String position;
+
     public String getFieldKey() {
         return fieldKey;
     }
@@ -43,5 +46,13 @@ public class FormLabel {
 
     public void setLabel(String label) {
         this.label = label;
+    }
+
+    public String getPosition() {
+        return position;
+    }
+
+    public void setPosition(String position) {
+        this.position = position;
     }
 }

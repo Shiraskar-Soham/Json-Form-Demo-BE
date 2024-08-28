@@ -12,4 +12,5 @@ public interface FormLabelRepo extends JpaRepository<FormLabel, Long> {
     @Query(value = "SELECT f.field_key, f.label FROM form_label f", nativeQuery = true)
     List<Object[]> findAllLabels();
 
+    List<FormLabel> findByPosition(String position);
 }

@@ -39,10 +39,17 @@ public class AccessRequestController {
         return accessRequestService.getAllListing(listingStatus);
     }
 
+//    @CrossOrigin(origins = "http://localhost:3000")
+//    @GetMapping("getJsonListings")
+//    public List<Map<String, Object>> getAllDynamicListing(@RequestParam(required = false) String listingStatus)
+//        throws CustomException {
+//        return accessRequestService.getAllDynamicListing(listingStatus);
+//    }
+
     @CrossOrigin(origins = "http://localhost:3000")
     @GetMapping("getJsonListings")
-    public List<Map<String, Object>> getAllDynamicListing(@RequestParam(required = false) String listingStatus)
-        throws CustomException {
+    public List<Map<String, Map<String,Object>>> getAllDynamicListing(@RequestParam(required = false) String listingStatus)
+            throws CustomException {
         return accessRequestService.getAllDynamicListing(listingStatus);
     }
 

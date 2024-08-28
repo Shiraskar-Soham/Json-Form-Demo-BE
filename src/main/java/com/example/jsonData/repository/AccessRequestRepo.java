@@ -16,7 +16,7 @@ public interface AccessRequestRepo extends JpaRepository<AccessRequest, Long> {
     @Query(value = "SELECT * FROM access_request where id=?1", nativeQuery = true)
     AccessRequest findByAccessRequestId(Long id);
 
-    List<AccessRequest> findByApproveStatus(Status listingStatus);
-
     List<AccessRequest> findByControlTowerStatusNot(Status status);
+
+    List<AccessRequest> findByApproveStatusAndControlTowerStatus(Status status, Status status1);
 }
