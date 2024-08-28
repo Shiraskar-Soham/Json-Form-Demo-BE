@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.ObjectUtils;
 
 @Service
 public class FormLabelService {
@@ -24,7 +23,7 @@ public class FormLabelService {
         return labelsMap;
     }
 
-    public  Map<String, String> getPositionWiseLabels(String position){
+    public Map<String, String> getPositionWiseLabels(String position) {
         List<FormLabel> results = formLabelRepository.findByPosition(position);
         Map<String, String> labelsMap = new HashMap<>();
         for (FormLabel result : results) {

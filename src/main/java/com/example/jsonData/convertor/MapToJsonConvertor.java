@@ -1,13 +1,13 @@
 package com.example.jsonData.convertor;
 
 import com.example.jsonData.enums.Systems;
-import jakarta.persistence.AttributeConverter;
-import jakarta.persistence.Converter;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.persistence.AttributeConverter;
+import jakarta.persistence.Converter;
 import java.io.IOException;
-import java.util.Map;
 import java.util.List;
+import java.util.Map;
 
 @Converter(autoApply = true)
 public class MapToJsonConvertor implements AttributeConverter<Map<Systems, List<String>>, String> {
@@ -26,7 +26,8 @@ public class MapToJsonConvertor implements AttributeConverter<Map<Systems, List<
     @Override
     public Map<Systems, List<String>> convertToEntityAttribute(String dbData) {
         try {
-            return objectMapper.readValue(dbData, new TypeReference<Map<Systems, List<String>>>() {});
+            return objectMapper.readValue(dbData, new TypeReference<Map<Systems, List<String>>>() {
+            });
         } catch (IOException e) {
             throw new RuntimeException("Failed to convert JSON to Map", e);
         }

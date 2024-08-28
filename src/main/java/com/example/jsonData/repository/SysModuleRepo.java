@@ -1,11 +1,10 @@
 package com.example.jsonData.repository;
 
 import com.example.jsonData.domain.SystemModule;
+import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
-
-import java.util.List;
 
 @Repository
 public interface SysModuleRepo extends JpaRepository<SystemModule, String> {

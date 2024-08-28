@@ -2,7 +2,14 @@ package com.example.jsonData.domain;
 
 import com.example.jsonData.enums.Company;
 import com.example.jsonData.enums.Systems;
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -21,7 +28,7 @@ public class SystemModule {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name= "companyName", nullable = false)
+    @Column(name = "companyName", nullable = false)
     @Enumerated(EnumType.STRING)
     private Company companyName;
 
@@ -73,14 +80,21 @@ public class SystemModule {
         SystemModule build();
     }
 
-
-    public static class Builder implements IdStep, CompanyNameStep, CompanyDisplayNameStep, SystemNameStep, SystemDisplayNameStep, ModuleStep, IsDeletedStep, BuildStep {
+    public static class Builder
+        implements IdStep, CompanyNameStep, CompanyDisplayNameStep, SystemNameStep,
+        SystemDisplayNameStep, ModuleStep, IsDeletedStep, BuildStep {
         private Long id;
+
         private Company companyName;
+
         private String companyDisplayName;
+
         private Systems systemName;
+
         private String systemDisplayName;
+
         private String module;
+
         private boolean isDeleted;
 
         private Builder() {
@@ -135,13 +149,13 @@ public class SystemModule {
         @Override
         public SystemModule build() {
             return new SystemModule(
-                    this.id,
-                    this.companyName,
-                    this.companyDisplayName,
-                    this.systemName,
-                    this.systemDisplayName,
-                    this.module,
-                    this.isDeleted
+                this.id,
+                this.companyName,
+                this.companyDisplayName,
+                this.systemName,
+                this.systemDisplayName,
+                this.module,
+                this.isDeleted
             );
         }
     }

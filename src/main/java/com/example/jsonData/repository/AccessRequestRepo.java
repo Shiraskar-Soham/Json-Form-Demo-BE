@@ -2,13 +2,10 @@ package com.example.jsonData.repository;
 
 import com.example.jsonData.domain.AccessRequest;
 import com.example.jsonData.enums.Status;
+import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
 
 @Repository
 public interface AccessRequestRepo extends JpaRepository<AccessRequest, Long> {

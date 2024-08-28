@@ -27,7 +27,8 @@ public class EmailService {
         javaMailSender.send(simpleMailMessage);
     }
 
-    public void sendRichEmail(String recipient, String subject, String htmlContent) throws MessagingException {
+    public void sendRichEmail(String recipient, String subject, String htmlContent)
+        throws MessagingException {
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
 

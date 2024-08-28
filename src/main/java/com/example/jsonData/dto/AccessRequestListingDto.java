@@ -1,35 +1,48 @@
 package com.example.jsonData.dto;
 
-
 import com.example.jsonData.enums.Company;
 import com.example.jsonData.enums.Status;
 import com.example.jsonData.enums.Systems;
+import java.util.List;
+import java.util.Map;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.util.List;
-import java.util.Map;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class AccessRequestListingDto {
     private Long id;
+
     private String employeeName;
+
     private String subDepartment;
+
     private Company companyName;
+
     private String emailId;
+
     private String approvingManagerName;
+
     private Status approvalStatus;
+
     private Status controlTowerStatus;
+
     private Long dateCreated;
+
     private Long dateApproved;
+
     private Long dateCompleted;
+
     private Map<Systems, List<String>> modules;
+
     private Company employeeCompany;
+
     private String requestRemarks;
+
     private String approveRemarks;
+
     private String reviewRemarks;
 
     public static interface IdStep {
@@ -100,23 +113,41 @@ public class AccessRequestListingDto {
         AccessRequestListingDto build();
     }
 
-
-    public static class Builder implements IdStep, EmployeeNameStep, SubDepartmentStep, CompanyNameStep, EmailIdStep, ApprovingManagerNameStep, ApprovalStatusStep, ControlTowerStatusStep, DateCreatedStep, DateApprovedStep, DateCompletedStep, ModulesStep, EmployeeCompanyStep, RequestRemarksStep, ApproveRemarksStep, ReviewRemarksStep, BuildStep {
+    public static class Builder
+        implements IdStep, EmployeeNameStep, SubDepartmentStep, CompanyNameStep, EmailIdStep,
+        ApprovingManagerNameStep, ApprovalStatusStep, ControlTowerStatusStep, DateCreatedStep,
+        DateApprovedStep, DateCompletedStep, ModulesStep, EmployeeCompanyStep, RequestRemarksStep,
+        ApproveRemarksStep, ReviewRemarksStep, BuildStep {
         private Long id;
+
         private String employeeName;
+
         private String subDepartment;
+
         private Company companyName;
+
         private String emailId;
+
         private String approvingManagerName;
+
         private Status approvalStatus;
+
         private Status controlTowerStatus;
+
         private Long dateCreated;
+
         private Long dateApproved;
+
         private Long dateCompleted;
+
         private Map<Systems, List<String>> modules;
+
         private Company employeeCompany;
+
         private String requestRemarks;
+
         private String approveRemarks;
+
         private String reviewRemarks;
 
         private Builder() {
@@ -225,22 +256,22 @@ public class AccessRequestListingDto {
         @Override
         public AccessRequestListingDto build() {
             return new AccessRequestListingDto(
-                    this.id,
-                    this.employeeName,
-                    this.subDepartment,
-                    this.companyName,
-                    this.emailId,
-                    this.approvingManagerName,
-                    this.approvalStatus,
-                    this.controlTowerStatus,
-                    this.dateCreated,
-                    this.dateApproved,
-                    this.dateCompleted,
-                    this.modules,
-                    this.employeeCompany,
-                    this.requestRemarks,
-                    this.approveRemarks,
-                    this.reviewRemarks
+                this.id,
+                this.employeeName,
+                this.subDepartment,
+                this.companyName,
+                this.emailId,
+                this.approvingManagerName,
+                this.approvalStatus,
+                this.controlTowerStatus,
+                this.dateCreated,
+                this.dateApproved,
+                this.dateCompleted,
+                this.modules,
+                this.employeeCompany,
+                this.requestRemarks,
+                this.approveRemarks,
+                this.reviewRemarks
             );
         }
     }

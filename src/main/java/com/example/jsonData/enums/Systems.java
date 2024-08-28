@@ -13,5 +13,4 @@ public enum Systems {
     OCEAN,
     PRISM,
     OMAT_FINANCE;
-
 }

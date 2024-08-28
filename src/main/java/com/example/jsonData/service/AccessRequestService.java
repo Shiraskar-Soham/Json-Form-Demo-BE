@@ -11,17 +11,19 @@ import com.example.jsonData.exceptions.CustomException;
 import com.example.jsonData.repository.AccessRequestRepo;
 import jakarta.mail.MessagingException;
 import java.lang.reflect.Field;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
-
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.*;
-
 import org.springframework.util.StringUtils;
 
-import static com.example.jsonData.enums.Status.*;
+import static com.example.jsonData.enums.Status.PENDING;
 
 @Service
 public class AccessRequestService {
@@ -41,7 +43,8 @@ public class AccessRequestService {
     @Autowired
     private FormLabelService formLabelService;
 
-    public Long addRequest(AccessRequestDto accessRequestDto) throws CustomException, MessagingException {
+    public Long addRequest(AccessRequestDto accessRequestDto)
+        throws CustomException, MessagingException {
         if (ObjectUtils.isEmpty(accessRequestDto)) {
             throw new CustomException("Access Request Not valid");
         }
@@ -49,7 +52,8 @@ public class AccessRequestService {
         if (ObjectUtils.isEmpty(systemsListMap)) {
             throw new CustomException("Modules can not be empty");
         }
-        systemsListMap.entrySet().removeIf(entry -> entry.getValue() == null || entry.getValue().isEmpty());
+        systemsListMap.entrySet()
+            .removeIf(entry -> entry.getValue() == null || entry.getValue().isEmpty());
         boolean allListsEmpty = systemsListMap.values().stream().allMatch(List::isEmpty);
         if (allListsEmpty) {
             throw new CustomException("All module lists cannot be empty");
@@ -111,7 +115,8 @@ public class AccessRequestService {
         } else if (listingStatus.equals("COMPLETED")) {
             e = accessRequestRepo.findByControlTowerStatusNot(PENDING);
         } else {
-            e = accessRequestRepo.findByApproveStatusAndControlTowerStatus(Status.valueOf(listingStatus), PENDING);
+            e = accessRequestRepo.findByApproveStatusAndControlTowerStatus(
+                Status.valueOf(listingStatus), PENDING);
         }
         List<AccessRequestListingDto> convertedList = new ArrayList<>();
         for (AccessRequest accessRequest : e) {
@@ -121,7 +126,8 @@ public class AccessRequestService {
         return convertedList;
     }
 
-    public AccessRequestListingDto managerApproval(Long id, Status action, String remarks) throws Exception {
+    public AccessRequestListingDto managerApproval(Long id, Status action, String remarks)
+        throws Exception {
         if (ObjectUtils.isEmpty(id)) {
             throw new Exception("id cannot be empty");
         }
@@ -171,12 +177,16 @@ public class AccessRequestService {
         htmlContent = htmlContent.replace("${managerApprovalStatus}", accessRequest.getApproveStatus().toString());
         htmlContent = htmlContent.replace("${approvalLink}","http://localhost:3000/");
 
-        emailService.sendRichEmail(accessRequest.getEmailId(), "Access Request Approval Required: " + accessRequest.getEmployeeName() + "-" +accessRequest.getPermissionRequired().keySet().toString(), htmlContent);
+        emailService.sendRichEmail(accessRequest.getEmailId(), "Access Request Approval Required: "
+            + accessRequest.getEmployeeName()
+            + "-"
+            + accessRequest.getPermissionRequired().keySet().toString(), htmlContent);
 
         return accessRequestListingDTOConverter.convert(accessRequest);
     }
 
-    public AccessRequestListingDto completeRequest(Long id, Status approval, String remarks) throws Exception {
+    public AccessRequestListingDto completeRequest(Long id, Status approval, String remarks)
+        throws Exception {
         if (ObjectUtils.isEmpty(id)) {
             throw new Exception("id cannot be empty");
         }
@@ -226,7 +236,10 @@ public class AccessRequestService {
         htmlContent = htmlContent.replace("${managerApprovalStatus}", accessRequest.getApproveStatus().toString());
         htmlContent = htmlContent.replace("${approvalLink}","http://localhost:3000/");
 
-        emailService.sendRichEmail(accessRequest.getEmailId(), "Access Request Approval Required: " + accessRequest.getEmployeeName() + "-" +accessRequest.getPermissionRequired().keySet().toString(), htmlContent);
+        emailService.sendRichEmail(accessRequest.getEmailId(), "Access Request Approval Required: "
+            + accessRequest.getEmployeeName()
+            + "-"
+            + accessRequest.getPermissionRequired().keySet().toString(), htmlContent);
 
         return accessRequestListingDTOConverter.convert(accessRequest);
     }

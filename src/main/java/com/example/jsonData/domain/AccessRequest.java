@@ -1,18 +1,24 @@
 package com.example.jsonData.domain;
 
-
 import com.example.jsonData.convertor.MapToJsonConvertor;
 import com.example.jsonData.enums.Company;
 import com.example.jsonData.enums.Status;
 import com.example.jsonData.enums.Systems;
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import java.util.List;
 import java.util.Map;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Where;
-
-import java.util.List;
 
 @Entity(name = "accessRequest")
 @Table(name = "accessRequest")
@@ -33,57 +39,57 @@ public class AccessRequest {
     @Column(name = "department", nullable = false)
     private String department;
 
-    @Column(name= "subDepartment", nullable = false)
+    @Column(name = "subDepartment", nullable = false)
     private String subDepartment;
 
-    @Column(name= "approvingManager", nullable = false)
+    @Column(name = "approvingManager", nullable = false)
     private String approvingManager;
 
-    @Column(name= "companyNameRequest", nullable = false)
+    @Column(name = "companyNameRequest", nullable = false)
     @Enumerated(EnumType.STRING)
     private Company companyName;
-    
-    @Column(name= "permissionRequired", nullable = false, columnDefinition = "json")
+
+    @Column(name = "permissionRequired", nullable = false, columnDefinition = "json")
     @Convert(converter = MapToJsonConvertor.class)
     private Map<Systems, List<String>> permissionRequired;
 
-    @Column(name= "dateCreated", nullable = false)
+    @Column(name = "dateCreated", nullable = false)
     private Long dateCreated;
 
-    @Column(name="approveStatus", nullable = false)
+    @Column(name = "approveStatus", nullable = false)
     @Enumerated(EnumType.STRING)
     private Status approveStatus;
 
-    @Column(name="isDeleted", nullable = false)
+    @Column(name = "isDeleted", nullable = false)
     private boolean isDeleted;
 
-    @Column(name="requestRemarks", nullable = false)
+    @Column(name = "requestRemarks", nullable = false)
     private String requestRemarks;
-    
-    @Column(name="employeeName", nullable = false)
+
+    @Column(name = "employeeName", nullable = false)
     private String employeeName;
-    
-    @Column(name="managerName", nullable = false)
+
+    @Column(name = "managerName", nullable = false)
     private String managerName;
-    
-    @Column(name="controlTowerStatus", nullable = false)
+
+    @Column(name = "controlTowerStatus", nullable = false)
     @Enumerated(EnumType.STRING)
     private Status controlTowerStatus;
 
-    @Column(name= "dateApproved", nullable = true)
+    @Column(name = "dateApproved", nullable = true)
     private Long dateApproved;
 
-    @Column(name= "dateCompleted", nullable = true)
+    @Column(name = "dateCompleted", nullable = true)
     private Long dateCompleted;
-    
+
     @Column(name = "employeeCompany", nullable = false)
     @Enumerated(EnumType.STRING)
     private Company employeeCompany;
 
-    @Column(name="approveRemarks", nullable = true)
+    @Column(name = "approveRemarks", nullable = true)
     private String approveRemarks;
 
-    @Column(name="reviewRemarks", nullable = true)
+    @Column(name = "reviewRemarks", nullable = true)
     private String reviewRemarks;
 
     public static interface IdStep {
@@ -166,25 +172,48 @@ public class AccessRequest {
         AccessRequest build();
     }
 
-    public static class Builder implements IdStep, EmailIdStep, DepartmentStep, SubDepartmentStep, ApprovingManagerStep, CompanyNameStep, PermissionRequiredStep, DateCreatedStep, ApproveStatusStep, IsDeletedStep, RequestRemarksStep, EmployeeNameStep, ManagerNameStep, ControlTowerStatusStep, DateApprovedStep, DateCompletedStep, EmployeeCompanyStep, ApproveRemarksStep, ReviewRemarksStep, BuildStep {
+    public static class Builder
+        implements IdStep, EmailIdStep, DepartmentStep, SubDepartmentStep, ApprovingManagerStep,
+        CompanyNameStep, PermissionRequiredStep, DateCreatedStep, ApproveStatusStep, IsDeletedStep,
+        RequestRemarksStep, EmployeeNameStep, ManagerNameStep, ControlTowerStatusStep,
+        DateApprovedStep, DateCompletedStep, EmployeeCompanyStep, ApproveRemarksStep,
+        ReviewRemarksStep, BuildStep {
         private Long id;
+
         private String emailId;
+
         private String department;
+
         private String subDepartment;
+
         private String approvingManager;
+
         private Company companyName;
+
         private Map<Systems, List<String>> permissionRequired;
+
         private Long dateCreated;
+
         private Status approveStatus;
+
         private boolean isDeleted;
+
         private String requestRemarks;
+
         private String employeeName;
+
         private String managerName;
+
         private Status controlTowerStatus;
+
         private Long dateApproved;
+
         private Long dateCompleted;
+
         private Company employeeCompany;
+
         private String approveRemarks;
+
         private String reviewRemarks;
 
         private Builder() {
@@ -231,7 +260,8 @@ public class AccessRequest {
         }
 
         @Override
-        public DateCreatedStep withPermissionRequired(Map<Systems, List<String>> permissionRequired) {
+        public DateCreatedStep withPermissionRequired(
+            Map<Systems, List<String>> permissionRequired) {
             this.permissionRequired = permissionRequired;
             return this;
         }
@@ -311,25 +341,25 @@ public class AccessRequest {
         @Override
         public AccessRequest build() {
             return new AccessRequest(
-                    this.id,
-                    this.emailId,
-                    this.department,
-                    this.subDepartment,
-                    this.approvingManager,
-                    this.companyName,
-                    this.permissionRequired,
-                    this.dateCreated,
-                    this.approveStatus,
-                    this.isDeleted,
-                    this.requestRemarks,
-                    this.employeeName,
-                    this.managerName,
-                    this.controlTowerStatus,
-                    this.dateApproved,
-                    this.dateCompleted,
-                    this.employeeCompany,
-                    this.approveRemarks,
-                    this.reviewRemarks
+                this.id,
+                this.emailId,
+                this.department,
+                this.subDepartment,
+                this.approvingManager,
+                this.companyName,
+                this.permissionRequired,
+                this.dateCreated,
+                this.approveStatus,
+                this.isDeleted,
+                this.requestRemarks,
+                this.employeeName,
+                this.managerName,
+                this.controlTowerStatus,
+                this.dateApproved,
+                this.dateCompleted,
+                this.employeeCompany,
+                this.approveRemarks,
+                this.reviewRemarks
             );
         }
     }
