@@ -177,10 +177,11 @@ public class AccessRequestService {
         htmlContent = htmlContent.replace("${managerApprovalStatus}", accessRequest.getApproveStatus().toString());
         htmlContent = htmlContent.replace("${approvalLink}","http://localhost:3000/");
 
-        emailService.sendRichEmail(accessRequest.getEmailId(), "Access Request Approval Required: "
-            + accessRequest.getEmployeeName()
-            + "-"
-            + accessRequest.getPermissionRequired().keySet().toString(), htmlContent);
+        emailService.sendRichEmail(accessRequest.getEmailId(),
+            "Access Request " + accessRequest.getApproveStatus() + " : "
+                + accessRequest.getEmployeeName()
+                + "-"
+                + accessRequest.getPermissionRequired().keySet().toString(), htmlContent);
 
         return accessRequestListingDTOConverter.convert(accessRequest);
     }
@@ -236,29 +237,30 @@ public class AccessRequestService {
         htmlContent = htmlContent.replace("${managerApprovalStatus}", accessRequest.getApproveStatus().toString());
         htmlContent = htmlContent.replace("${approvalLink}","http://localhost:3000/");
 
-        emailService.sendRichEmail(accessRequest.getEmailId(), "Access Request Approval Required: "
-            + accessRequest.getEmployeeName()
-            + "-"
-            + accessRequest.getPermissionRequired().keySet().toString(), htmlContent);
+        emailService.sendRichEmail(accessRequest.getEmailId(),
+            "Access Request " + accessRequest.getControlTowerStatus() + " : "
+                + accessRequest.getEmployeeName()
+                + "-"
+                + accessRequest.getPermissionRequired().keySet().toString(), htmlContent);
 
         return accessRequestListingDTOConverter.convert(accessRequest);
     }
 
-    public List<Map<String, Map<String, Object>>> getAllDynamicListing(String listingStatus)
+    public List<Map<String, Object>> getAllDynamicListing(String listingStatus)
         throws CustomException {
         List<AccessRequestListingDto> list = getAllListing(listingStatus);
-        List<Map<String, Map<String, Object>>> result = new ArrayList<>();
+        List<Map<String, Object>> result = new ArrayList<>();
         for (AccessRequestListingDto accessRequest : list) {
-            Map<String, Map<String, Object>> json = convertToJson(accessRequest);
+            Map<String, Object> json = convertToJson(accessRequest);
             result.add(json);
         }
         return result;
     }
 
-    public Map<String, Map<String, Object>> convertToJson(AccessRequestListingDto dto)
+    public Map<String, Object> convertToJson(AccessRequestListingDto dto)
         throws CustomException {
-        Map<String, Map<String, Object>> jsonData = new HashMap<>();
-
+        Map<String, Object> jsonData = new HashMap<>();
+        jsonData.put("id", dto.getId());
         jsonData.put("header",
             processSection(dto, "header", formLabelService.getPositionWiseLabels("header"), false));
         jsonData.put("footer",
