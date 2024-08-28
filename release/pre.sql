@@ -668,3 +668,18 @@ INSERT INTO system_module (company_name, company_display_name, system_name, syst
 	('OMAT', 'Omat', 'OMAT_FINANCE', 'Omat Finance', 'Invoice', false),
 	('OMAT', 'Omat', 'OMAT_FINANCE', 'Omat Finance', 'LoanPostSanctionChecklist', false),
 	('OMAT', 'Omat', 'OMAT_FINANCE', 'Omat Finance', 'LoanLimitUtilisation', false);
+
+--	Form_label fields
+	INSERT INTO form_label (field_key, label, position) VALUES ('subDepartment', 'Sub-Department', 'header');
+    INSERT INTO form_label (field_key, label, position) VALUES ('employeeCompany', 'Company Name', 'header');
+    INSERT INTO form_label (field_key, label, position) VALUES ('employeeName', 'Employee Name', 'header');
+    INSERT INTO form_label (field_key, label, position) VALUES ('dateCreated', 'Date Created', 'labelChips');
+    INSERT INTO form_label (field_key, label, position) VALUES ('emailId', 'Email Id', 'labelChips');
+    INSERT INTO form_label (field_key, label, position) VALUES ('approvalStatus', 'Manager Status', 'labelChips');
+    INSERT INTO form_label (field_key, label, position) VALUES ('controlTowerStatus', 'Control Tower Status', 'labelChips');
+    INSERT INTO form_label (field_key, label, position) VALUES ('dateApproved', 'Date Approved', 'labelChips');
+    INSERT INTO form_label (field_key, label, position) VALUES ('approveRemarks', 'Manager Remarks', 'footer');
+    INSERT INTO form_label (field_key, label, position) VALUES ('dateCompleted', 'Date Completed', 'labelChips');
+    INSERT INTO form_label (field_key, label, position) VALUES ('reviewRemarks', 'Review Remarks', 'footer');
+    INSERT INTO form_label (field_key, label, position) VALUES ('requestRemarks', 'Request Remarks', 'footer');
+    INSERT INTO form_label (field_key, label, position) VALUES ('modules', 'Modules', 'body');
