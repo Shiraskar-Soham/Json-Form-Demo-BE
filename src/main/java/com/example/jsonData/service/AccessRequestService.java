@@ -104,10 +104,6 @@ public class AccessRequestService {
         return accessRequest.getId();
     }
 
-    public List<AccessRequest> getAll() {
-        return accessRequestRepo.findAll();
-    }
-
     public List<AccessRequestListingDto> getAllListing(String listingStatus) {
         List<AccessRequest> e = new ArrayList<>();
         if (StringUtils.isEmpty(listingStatus)) {
@@ -246,100 +242,52 @@ public class AccessRequestService {
         return result;
     }
 
-    public Map<String, Map<String, Object>> convertToJson(AccessRequestListingDto dto) throws CustomException {
-        Map<String, String> headerLabelsFromDb = formLabelService.getPositionWiseLabels("header");
-        Map<String, String> labelChipsLabelsFromDb = formLabelService.getPositionWiseLabels("labelChips");
-        Map<String, String> footerLabelsFromDb = formLabelService.getPositionWiseLabels("footer");
-        Map<String, String> bodyLabelsFromDb = formLabelService.getPositionWiseLabels("body");
-
-        Map<String, Object> header = new HashMap<>();
-        for (Map.Entry<String, String> entry : headerLabelsFromDb.entrySet()) {
-            String fieldKey = entry.getKey();
-            String label = entry.getValue();
-
-            try {
-                Field field;
-                try {
-                    field = dto.getClass().getDeclaredField(fieldKey);
-                } catch (NoSuchFieldException e) {
-                    continue;
-                }
-                field.setAccessible(true);
-                Object value = field.get(dto);
-                header.put(label, value);
-            } catch (IllegalAccessException e) {
-                throw new CustomException("Error accessing field: " + fieldKey, e);
-            }
-        }
-        Map<String, Object> footer = new HashMap<>();
-        for (Map.Entry<String, String> entry : footerLabelsFromDb.entrySet()) {
-            String fieldKey = entry.getKey();
-            String label = entry.getValue();
-
-            try {
-                Field field;
-                try {
-                    field = dto.getClass().getDeclaredField(fieldKey);
-                } catch (NoSuchFieldException e) {
-                    continue;
-                }
-                field.setAccessible(true);
-                Object value = field.get(dto);
-                if(!ObjectUtils.isEmpty(value)) footer.put(label, value);
-            } catch (IllegalAccessException e) {
-                throw new CustomException("Error accessing field: " + fieldKey, e);
-            }
-        }
-        Map<String, Object> labelChips = new HashMap<>();
-        for (Map.Entry<String, String> entry : labelChipsLabelsFromDb.entrySet()) {
-            String fieldKey = entry.getKey();
-            String label = entry.getValue();
-
-            try {
-                Field field;
-                try {
-                    field = dto.getClass().getDeclaredField(fieldKey);
-                } catch (NoSuchFieldException e) {
-                    continue;
-                }
-                field.setAccessible(true);
-                Object value = field.get(dto);
-                if(!ObjectUtils.isEmpty(value)){
-                    if(label.contains("Date")){
-                        value = formatDate((Long) value);
-                    }
-                    labelChips.put(label, value);
-                }
-            } catch (IllegalAccessException e) {
-                throw new CustomException("Error accessing field: " + fieldKey, e);
-            }
-        }
-        Map<String, Object> body = new HashMap<>();
-        for (Map.Entry<String, String> entry : bodyLabelsFromDb.entrySet()) {
-            String fieldKey = entry.getKey();
-            String label = entry.getValue();
-
-            try {
-                Field field;
-                try {
-                    field = dto.getClass().getDeclaredField(fieldKey);
-                } catch (NoSuchFieldException e) {
-                    continue;
-                }
-                field.setAccessible(true);
-                Object value = field.get(dto);
-                body.put(label, value);
-            } catch (IllegalAccessException e) {
-                throw new CustomException("Error accessing field: " + fieldKey, e);
-            }
-        }
+    public Map<String, Map<String, Object>> convertToJson(AccessRequestListingDto dto)
+        throws CustomException {
         Map<String, Map<String, Object>> jsonData = new HashMap<>();
-        jsonData.put("header", header);
-        jsonData.put("footer", footer);
-        jsonData.put("labelChips", labelChips);
-        jsonData.put("body", body);
+
+        jsonData.put("header",
+            processSection(dto, "header", formLabelService.getPositionWiseLabels("header"), false));
+        jsonData.put("footer",
+            processSection(dto, "footer", formLabelService.getPositionWiseLabels("footer"), true));
+        jsonData.put("labelChips",
+            processSection(dto, "labelChips", formLabelService.getPositionWiseLabels("labelChips"),
+                true));
+        jsonData.put("body",
+            processSection(dto, "body", formLabelService.getPositionWiseLabels("body"), false));
 
         return jsonData;
+    }
+
+    private Map<String, Object> processSection(AccessRequestListingDto dto, String sectionName,
+        Map<String, String> labelsFromDb, boolean skipEmptyValues) throws CustomException {
+        Map<String, Object> sectionMap = new HashMap<>();
+
+        for (Map.Entry<String, String> entry : labelsFromDb.entrySet()) {
+            String fieldKey = entry.getKey();
+            String label = entry.getValue();
+            try {
+                Field field;
+                try {
+                    field = dto.getClass().getDeclaredField(fieldKey);
+                } catch (NoSuchFieldException e) {
+                    continue;
+                }
+                field.setAccessible(true);
+                Object value = field.get(dto);
+                if (skipEmptyValues && ObjectUtils.isEmpty(value)) {
+                    continue;
+                }
+                if (label.contains("Date")
+                    && value instanceof Long) {
+                    value = formatDate((Long) value);
+                }
+                sectionMap.put(label, value);
+            } catch (IllegalAccessException e) {
+                throw new CustomException("Error accessing field: " + fieldKey, e);
+            }
+        }
+        return sectionMap;
     }
 
     private String formatDate(Long timestamp) {
